@@ -214,19 +214,21 @@ class Attack:
 class Gamestate:
   def add_thing(self, newthing):
     # choose sprite for newthing
+    # first choice, lower sprite. upper if necessary. (lower is easier to type)
     lower_sprite = newthing.name[0].lower()
-    upper_sprite = lower_sprite.upper()
-    upper_name_collision = False
+    upper_sprite = newthing.name[0].upper()
+    lower_name_collision = False
     for oldthing in self.things:
-      if oldthing.sprite == lower_sprite:
-        print 'cant add ' + newthing.name + ' because we already have this lowercase sprite'
-        return
       if oldthing.sprite == upper_sprite:
-        upper_name_collision = True
-    if upper_name_collision:
-      newthing.sprite = lower_sprite
-    else:
+        print('cant add ' + newthing.name +
+              ' because we already have this uppercase sprite')
+        return
+      if oldthing.sprite == lower_sprite:
+        lower_name_collision = True
+    if lower_name_collision:
       newthing.sprite = upper_sprite
+    else:
+      newthing.sprite = lower_sprite
     # add newthing to the list
     self.things.append(newthing)
 
