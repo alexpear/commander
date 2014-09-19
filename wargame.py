@@ -160,8 +160,8 @@ class Unit(Thing):
 
   def printinfo(self):
     string = "{coord} {name} x{quant}, WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}".format(
-      coord=Game.coordtostring(self.coord), name=self.name, quant=self.quantity, ws=self.ws, bs=self.bs, 
-      s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld, sv=self.sv, pt=self.pt)
+      coord=Game.coordtostring(self.coord), name=self.name.capitalize(), quant=self.quantity, ws=self.ws,
+      bs=self.bs, s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld, sv=self.sv, pt=self.pt)
     print string
 
   def sprite(self, charcount=3, colorkey='black'):
