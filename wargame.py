@@ -502,23 +502,30 @@ class Game:
       return True
     # context-sensitive command for a unit:
     elif (self.gamestate.unit_from_sprite(rawstring.split()[0]) and 
-          len(words) >= 2 and
-          Game.parsecoord(words[-1])):
+          len(words) >= 2):
       # how to do this without code duplication?
-      unit = self.gamestate.unit_from_sprite(rawstring.split()[0]) 
-      coord = Game.parsecoord(words[-1])
-      if unit and coord:
-        target = self.gamestate.thingat(coord)
-        if target:
-          # implied shooting (or assaulting+++)
-          self.gamestate.shoot(unit, target)
-        else:
-          # implied moving
-          self.gamestate.move(unit, coord)
-          self.gamestate.printgrid()
+      rawwords = rawstring.split()
+      unit = self.gamestate.unit_from_sprite(rawwords[0]) 
+      if unit:
+        # first see if last word describes a unit
+        target = self.gamestate.unit_from_sprite(rawwords[-1])
+        if target is None:
+          # alternately see if last word is in coord format
+          coord = Game.parsecoord(words[-1])
+          if coord:
+            target = self.gamestate.thingat(coord)
+            if target is None:
+              # they want to move
+              self.gamestate.move(unit, coord)
+              self.gamestate.printgrid()
+              return
+          else:
+            print('error, couldnt parse context sensitive unit command')
+        # they want to shoot at target (or assault later)
+        self.gamestate.shoot(unit, target)
       else:
         print('error: at first i thought you were giving a unit-specific '
-            + 'command, but i cant parse it')
+            + 'command, but i cant find a unit with that initial')
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
