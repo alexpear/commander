@@ -57,6 +57,9 @@ def distance(a, b):
   coldiff = abs(a[1] - b[1])
   return int(round(math.sqrt(rowdiff**2 + coldiff**2)))
 
+def coord_sum(a, b):
+  return [a[0] + b[0], a[1] + b[1]]
+
 # TODO: more rolls, for Ld, to-hit, diff terrain, etc? 
 def roll(logtext='Rolling', diecount=1, goal=None, wanthigh=True):
   if diecount <= 0:
@@ -212,6 +215,22 @@ class Attack:
     self.specials = specials
     self.active = True
 
+# returns coord of form [0, -1] or [-1, 1], etc suggesting
+# the rough direction from coords a to b.
+# Only returns integer coordinates, so 9 possible return values (inc 0,0).
+# used for Gamestate.act(). Kindof hacky.
+def direction_from(a, b):
+  diff_coord = [b[0] - a[0], b[1] - a[1]]
+  def one_zero_minusone(x):
+    if x > 0:
+      return 1
+    elif x == 0:
+      return 0
+    else:
+      return -1
+  return [one_zero_minusone(diff_coord[0]),
+          one_zero_minusone(diff_coord[1])]
+
 class Gamestate:
   def add_thing(self, newthing):
     # choose sprite for newthing
@@ -256,6 +275,9 @@ class Gamestate:
       print 'Sorry, unit cant move that far ({real}sq / {realin}", but move is {max}sq / {maxin}")'.format(
         real=dist, realin=inches(dist), max=thing.move, maxin=inches(thing.move))
       return
+    elif self.thingat(destinationcoord):
+      print('Sorry, unit cant move to occupied coord')
+      return
 
     # TODO: other checks, asserts
     self.debug_move(thing, destinationcoord)
@@ -264,6 +286,9 @@ class Gamestate:
     # asserts TODO
     if target.quantity <= 0 or shooter.quantity <= 0:
       print 'error, one unit is empty / wiped out'
+      return
+    elif target.allegiance == shooter.allegiance:
+      print('was gonna shoot but didnt because both units are from same army')
       return
     # print stuff TODO
 
@@ -349,6 +374,7 @@ class Gamestate:
     self.spawn_unit("Tactical squad", [6,5], 'rebels')
     self.spawn_unit("Cadets", [7,9], 'rebels')
 
+  # tag Gamestate init gamestate __init__()
   def __init__(self):
     self.grid = [[Square() for c in range(WIDTH)] for r in range(HEIGHT)]
     self.things = []  # all things
@@ -404,6 +430,35 @@ class Gamestate:
     print '    - - - - - - - - - - - -'
     print '    0 1 2 3 4 5 6 7 8 9 X E'
     print ''
+
+  # simple AI method. Unit does what it thinks best action would be.
+  # TODO improve. Currently moves toward and shoots closest foe.
+  def act(self, acting_unit):
+    # First chooses closest foe as target:
+    chosen_target = self.things[0]
+    shortest_so_far = 999 # shortest distance of a foe so far
+    for other_unit in self.things:
+      if (other_unit.allegiance == acting_unit.allegiance or
+          other_unit.quantity <= 0):
+        continue  # invalid unit, not a foe
+      dist = distance(other_unit.coord, acting_unit.coord)
+      if dist < shortest_so_far:
+        shortest_so_far = dist
+        chosen_target = other_unit
+
+    # Now moves toward target:
+    # really hacky:
+    cur = acting_unit.coord
+    self.move(
+      acting_unit,
+      coord_sum(
+        cur,
+        direction_from(cur, chosen_target.coord)))
+    self.printgrid()
+
+    # Now shoots target:
+    self.shoot(acting_unit, chosen_target)
+
 
 class Game:
   def __init__(self):
@@ -501,29 +556,34 @@ class Game:
       self.gamestate.printgrid()
     elif cmd.startswith('quit') or cmd.startswith('exit'):
       return True
-    # context-sensitive command for a unit:
-    elif (self.gamestate.unit_from_sprite(rawstring.split()[0]) and 
-          len(words) >= 2):
+    # context-sensitive command for a unit: TODO: clean up logic
+    elif (self.gamestate.unit_from_sprite(rawstring.split()[0])):
       # how to do this without code duplication?
       rawwords = rawstring.split()
       unit = self.gamestate.unit_from_sprite(rawwords[0]) 
       if unit:
-        # first see if last word describes a unit
-        target = self.gamestate.unit_from_sprite(rawwords[-1])
-        if target is None:
-          # alternately see if last word is in coord format
-          coord = Game.parsecoord(words[-1])
-          if coord:
-            target = self.gamestate.thingat(coord)
-            if target is None:
-              # they want to move
-              self.gamestate.move(unit, coord)
-              self.gamestate.printgrid()
-              return
-          else:
-            print('error, couldnt parse context sensitive unit command')
-        # they want to shoot at target (or assault later)
-        self.gamestate.shoot(unit, target)
+        # singleword version. calls act() on unit (bot behavior)
+        if len(words) == 1:
+          self.gamestate.act(unit)
+        # multiword version: [unit] [do something]
+        elif len(words) >= 2:
+          # first see if last word describes a unit
+          target = self.gamestate.unit_from_sprite(rawwords[-1])
+          if target is None:
+            # alternately see if last word is in coord format
+            coord = Game.parsecoord(words[-1])
+            if coord:
+              target = self.gamestate.thingat(coord)
+              if target is None:
+                # they want to move
+                self.gamestate.move(unit, coord)
+                self.gamestate.printgrid()
+                return
+            else:
+              print('error, couldnt parse context sensitive unit command')
+          # they want to shoot at target (or assault later)
+          # TODO check if both friendlies, then move first towards the second.
+          self.gamestate.shoot(unit, target)
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
@@ -546,7 +606,6 @@ class Game:
 
 g = Game()
 g.gamestate.printgrid()
-# g.gamestate.distancetest()
 g.run()
 
 
