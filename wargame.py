@@ -130,7 +130,7 @@ class Thing:
 # Color is the terminal display color
 class Unit(Thing):
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
-      shootstr=3, ap=7, rng=4, weapontype='rapidfire', weaponshots=1, quantity=10, move=1, pt=10, color=32,):
+      shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1, quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
     self.name = name
     self.sprite = '?' # until Gamestate's add_thing() is called
     self.move = move
@@ -149,14 +149,13 @@ class Unit(Thing):
     self.weapontype = weapontype
     self.shotspercreature = weaponshots # to remove
     self.pt = pt
-    self.maxap = 1
-    self.curap = self.maxap # replace with movementleft +++
+    self.move_left = self.move
     self.size = 20
     self.quantity = quantity
+    self.allegiance = allegiance
     self.coord = [888,888]
     # most of these are pretty debug
     # later store wargear (or wargear stats), state, other stats from notes
-    
 
   def printinfo(self):
     string = "{coord} {name} x{quant}, WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}".format(
@@ -164,43 +163,45 @@ class Unit(Thing):
       bs=self.bs, s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld, sv=self.sv, pt=self.pt)
     print string
 
+  # TODO unused so far
   def sprite(self, charcount=3, colorkey='black'):
     return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  # untested
 
-
-  types = [['strider', ['strider', 5, 16, 6, 70]]]
   # types = {'space marine' : }
 
   @classmethod
-  def new(cls, typename):
+  def new(cls, typename, allegiance='rebels'):
     # later, use types list above
     lowercasename = typename.lower()
     # Tactical Squad
     if lowercasename.startswith('tactical'):
-      return Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-        shootstr=4, ap=5, rng=4, weaponshots=2,
+      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
+        shootstr=4, ap=5, rng=2, weaponshots=2,
         quantity=10, move=1, pt=16)
     # Assault Marines
     elif lowercasename.startswith('assault'):
-      return Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
+      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
         shootstr=4, ap=5, rng=2, quantity=10, move=2, pt=22)
     # Devastator Squad of 4, w/ lascannons:
     elif lowercasename.startswith('devastator'):
-      return Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
+      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
         shootstr=9, ap=2, rng=8, quantity=4, move=1, pt=26)
     # Siege/Sapper Imperial Guard troops
     elif lowercasename.startswith('siege'):
-      return Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
+      new_unit = Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
         shootstr=3, ap=7, rng=2, weaponshots=2,
         quantity=20, move=1, pt=9)
     # Cadia-esque cadets, also Ender's G, that one Halo series
     elif lowercasename.startswith('cadet'):
-      return Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
+      new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
         shootstr=3, ap=7, rng=3, weaponshots=2,
         quantity=20, move=1, pt=6)
     else:
       print 'error, i did not recognize Unit typename. im giving it default stats.'
-      return Unit(typename)
+      new_unit = Unit(typename)
+
+    new_unit.allegiance = allegiance
+    return new_unit
 
 # a shot or attack in shooting or assault. 
 # Can also become a hit, wound, unsaved wound at various times. 
@@ -314,8 +315,8 @@ class Gamestate:
 
     # Saves
     for attack in wounds:
-      # TODO: invulnerable saves, cover saves, AP
-      if target.sv >= 7:
+      # TODO: invulnerable saves, cover saves
+      if target.sv >= 7 or target.sv >= attack.ap:
         break
       need_to_roll = target.sv
       result = roll(
@@ -333,20 +334,20 @@ class Gamestate:
     # TODO: remember how many had at start, for 25% Ld check  
     # effects of casualties such as removing empty Units from game TODO
 
-  def spawn_unit(self, typename, coord):
-    unit = Unit.new(typename)
+  def spawn_unit(self, typename, coord, allegiance='rebels'):
+    unit = Unit.new(typename, allegiance)
     self.add_thing(unit)
     self.debug_move(unit, coord)
 
   def spawndebugunits(self):
     # protectorate side (north)
-    self.spawn_unit("Devastator squad", [1,7])
-    self.spawn_unit("Assault marines", [1,4])
+    self.spawn_unit("Devastator squad", [1,7], 'protectorate')
+    self.spawn_unit("Assault marines", [1,4], 'protectorate')
 
     # rebels side (south)
-    self.spawn_unit("Cadets", [7,2])
-    self.spawn_unit("Tactical squad", [6,5])
-    self.spawn_unit("Cadets", [7,9])
+    self.spawn_unit("Cadets", [7,2], 'rebels')
+    self.spawn_unit("Tactical squad", [6,5], 'rebels')
+    self.spawn_unit("Cadets", [7,9], 'rebels')
 
   def __init__(self):
     self.grid = [[Square() for c in range(WIDTH)] for r in range(HEIGHT)]
@@ -564,7 +565,11 @@ TODO:
   -s 3,5
    -means s should move, shoot, or assault to/at coord 3,5, depending on context
     / which phase we're in. 
--move some conceptual sections out into separate files/modules 
+-move some conceptual sections out into separate files/modules
+-each unit having an army alignment
+-basic act() behavior for a bot-controlled unit
+-rapid fire, heavy etc rules
+ -track moved, shot per unit
     
 
   paste from offtopic 2014-01-10 or so
