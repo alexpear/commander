@@ -252,6 +252,16 @@ class Gamestate:
     # add newthing to the list
     self.things.append(newthing)
 
+  # called when a unit takes wounds
+  def damage(self, unit, wounds):
+    # TODO: multiwound model support
+    unit.quantity -= wounds
+    if unit.quantity <= 0:
+      self.things.remove(unit)
+      # TODO call this with more fanfare and ceremony?
+    # TODO once turns are implemented, track casualties per turn
+    # because of 25% thing, etc
+
   # Has less restrictions than move()
   def debug_move(self, thing, destinationcoord):
     if thing==None:
@@ -288,7 +298,7 @@ class Gamestate:
       print 'error, one unit is empty / wiped out'
       return
     elif target.allegiance == shooter.allegiance:
-      print('was gonna shoot but didnt because both units are from same army')
+      print('(was gonna shoot but didnt because both units are from same army)')
       return
     # print stuff TODO
 
@@ -354,10 +364,8 @@ class Gamestate:
     print ' {n} casualties...'.format(n=len(unsaved_wounds))
   
     if len(unsaved_wounds) > 0:
-      target.quantity -= len(unsaved_wounds)
+      self.damage(target, len(unsaved_wounds))
       print ' Now target has ' + str(target.quantity) + ' creatures left in it.'
-    # TODO: remember how many had at start, for 25% Ld check  
-    # effects of casualties such as removing empty Units from game TODO
 
   def spawn_unit(self, typename, coord, allegiance='rebels'):
     unit = Unit.new(typename, allegiance)
