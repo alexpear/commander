@@ -549,7 +549,7 @@ class Game:
     cmd = rawstring.lower().strip()
     words = rawstring.lower().split()
 
-    if words[0] in ('draw', 'look', 'grid', 'board', 'map'):
+    if words[0] in ('draw', 'look', 'grid', 'board', 'map', 'ls'):
       if len(words) == 1:
         # draw
         self.gamestate.printgrid()
