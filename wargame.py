@@ -183,7 +183,36 @@ class Unit(Thing):
     return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  
     # untested
 
-  # types = {'space marine' : }
+  # alternate way of storing: as Wargear and Unit or UnitProfile objects, 
+  # constructed here at start. Positional constructors would mean not retyping 
+  # 'ld' each time. But less readable i suppose.
+
+  wargear_profiles = {
+	  'bolt pistol': {
+		  's': 4, 'ap': 5, 'range': 2, 'type': 'pistol', 'shots': 1
+	  },
+	  'boltgun': {
+		  's': 4, 'ap': 5, 'range': 4, 'type': 'rapid fire', 'shots': 1
+	  }
+  }
+
+	# grouped by army list / codex
+  unit_profiles = {
+  'space marines': {
+	  'tactical marines': {
+		  'short_name': 'tact',
+		  'ws':4, 'bs':4, 's':4, 't':4, 'w':1, 'i':4, 'a':1, 'ld':8, 'sv':3,
+		  'wargear': ['boltgun', 'bolt pistol', 'combat knife', 'frags'],
+		  'type': 'infantry',
+		  'pt':16,
+		  'quantity': 10
+	  }
+  
+  },
+  'astra militarum': {
+
+  }
+  }
 
   @classmethod
   def new(cls, typename, allegiance='rebels'):
@@ -676,6 +705,16 @@ TODO:
 lower priority:
 -printinfo command for a specific unit?     
 
+
+
+
+so what can i module out?
+-unit_types dicts etc
+-Game vs Gamestate?
+ -could Gamestate be its own module? 
+-maybe a class for global methods?
+ -some could go into class Game, some cant
+-class Unit 
 
 
 
