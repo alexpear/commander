@@ -33,6 +33,12 @@ colordict = {
   'grey': '1;30;47m'
 }
 
+legend = '''-1,-1  -1,0  -1,1
+
+ 0,-1         0,1
+
+ 1,-1   1,0   1,1'''
+
 def tiles(inches):
   return inches / 6.0
 def inches(tiles):
@@ -281,7 +287,8 @@ class Gamestate:
       print 'error, destination {r},{c} is already occupied'.format(
         r=destinationcoord[0], c=destinationcoord[1])
   
-    # TODO? if not in self.things, add to self.things
+    if thing not in self.things:
+    	self.add_thing(thing)
     thing.coord = destinationcoord
 
   # Use this to move units
@@ -303,14 +310,13 @@ class Gamestate:
     self.debug_move(thing, destinationcoord)
 
   def shoot(self, shooter, target):
-    # asserts TODO
     if target.quantity <= 0 or shooter.quantity <= 0:
       print 'error, one unit is empty / wiped out'
       return
     elif target.allegiance == shooter.allegiance:
       print('(was gonna shoot but didnt because both units are from same army)')
       return
-    # print stuff TODO
+    # more asserts? TODO
 
     print shooter.name + ' is shooting at ' + target.name
     dist = distance(shooter.coord, target.coord)
@@ -524,8 +530,12 @@ class Game:
           print 'Error, i can\'t understand this draw command'
           return
         targetcoord = Game.parsecoord(words[1])
-        # call a method to print detailed summary of targetcoord +++ TODO
-        pass
+        if targetcoord:
+        	thing = self.gamestate.thingat(targetcoord)
+        	if thing:
+        		thing.printinfo()
+        		return
+    		print('Error, i dont know what you want to look at in given coord')
     # units command, format 'squads', 'units', etc
     # prints detailed summary of all units, models etc
     elif words[0] in ['squads', 'units']:
@@ -535,7 +545,6 @@ class Game:
       for thing in self.gamestate.things:
         thing.printinfo()
 
-    # TODO: formats like 'move 2,3 2,4', 'shoot 0,1 0,9' etc
     # move command, format 'move 2,3 to 4,1' or 'move 2,3 4,1' for now
     elif words[0]=='move':
       if len(words) < 3 or (not words[1][0].isdigit()) or (not words[-1][0].isdigit()):
@@ -574,6 +583,11 @@ class Game:
         return
       # check for out of bounds TODO
       spawncoord = Game.parsecoord(words[2])
+      if not spawncoord or (
+	      	spawncoord[0] < 0 or spawncoord[0] >= HEIGHT or 
+	      	spawncoord[1] < 0 or spawncoord[1] >= WIDTH):
+        print('Error, new command out of bounds or otherwise invalid')
+        return
       newunit = Unit.new(words[1])
       self.gamestate.add_thing(newunit)
       self.gamestate.debug_move(newunit, spawncoord)
@@ -616,7 +630,8 @@ class Game:
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
-    # TODO command that asks for info about a specific sprite 
+    elif cmd == 'legend' or cmd == 'directions' or cmd == 'rose':
+    	print(legend)
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
@@ -642,20 +657,24 @@ g.run()
 '''
 TODO: 
 -move some conceptual sections out into separate files/modules
--unique sprites
- -s and S
- -max 2 of each of same unit for now  
-  -later can add ' / prime notation, for 4 repeats
+-later can add ' aka prime notation, for 4 repeats
 -each unit having an army alignment
--basic act() behavior for a bot-controlled unit
 -rapid fire, heavy etc rules
  -track moved, shot per unit
 -spawn random units 
  -prereq?: store unit stats as dict? 
 -simple assault, obv
--printinfo command for a specific unit?     
 -clean up tabs and end-of-line whitespace in files
--relative move instead of absolute-coord move
+-color by allegiance
+ -use sprite() method above?
+-terrain
+ -cover
+ -difficult terrain
+ -impassible terrain 
+
+
+lower priority:
+-printinfo command for a specific unit?     
 
 
 
