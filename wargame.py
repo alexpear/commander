@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 # ? 
 
-import math
-import random
+import data
+from math import sqrt
+from random import randint
 
 '''
 my 'wargame' is cool, but /this/ copy of the file 
@@ -22,6 +23,7 @@ is being slowly converted into a simplified 40k rules game.
 
 # global methods, maybe clumsy:
 
+# move to data.py? 
 colordict = {
   'black': '1;37;40m',
   'red': '1;37;41m',
