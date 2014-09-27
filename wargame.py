@@ -170,12 +170,12 @@ class Unit(Thing):
 
   def printinfo(self):
     string = (
-	    "{coord} {name} x{quant}, " +
+      "{coord} {name} x{quant}, " +
       "WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}").format(
-	      coord=Game.coordtostring(self.coord), name=self.name.capitalize(),
-	      quant=self.quantity, ws=self.ws, bs=self.bs, s=self.s, t=self.t,
-	      w=self.w, i=self.i, a=self.a, ld=self.ld,
-	      sv=self.sv, pt=self.pt)
+        coord=Game.coordtostring(self.coord), name=self.name.capitalize(),
+        quant=self.quantity, ws=self.ws, bs=self.bs, s=self.s, t=self.t,
+        w=self.w, i=self.i, a=self.a, ld=self.ld,
+        sv=self.sv, pt=self.pt)
     print string
 
   # TODO unused so far
@@ -186,33 +186,6 @@ class Unit(Thing):
   # alternate way of storing: as Wargear and Unit or UnitProfile objects, 
   # constructed here at start. Positional constructors would mean not retyping 
   # 'ld' each time. But less readable i suppose.
-
-  wargear_profiles = {
-	  'bolt pistol': {
-		  's': 4, 'ap': 5, 'range': 2, 'type': 'pistol', 'shots': 1
-	  },
-	  'boltgun': {
-		  's': 4, 'ap': 5, 'range': 4, 'type': 'rapid fire', 'shots': 1
-	  }
-  }
-
-	# grouped by army list / codex
-  unit_profiles = {
-  'space marines': {
-	  'tactical marines': {
-		  'short_name': 'tact',
-		  'ws':4, 'bs':4, 's':4, 't':4, 'w':1, 'i':4, 'a':1, 'ld':8, 'sv':3,
-		  'wargear': ['boltgun', 'bolt pistol', 'combat knife', 'frags'],
-		  'type': 'infantry',
-		  'pt':16,
-		  'quantity': 10
-	  }
-  
-  },
-  'astra militarum': {
-
-  }
-  }
 
   @classmethod
   def new(cls, typename, allegiance='rebels'):
@@ -317,7 +290,7 @@ class Gamestate:
         r=destinationcoord[0], c=destinationcoord[1])
   
     if thing not in self.things:
-    	self.add_thing(thing)
+      self.add_thing(thing)
     thing.coord = destinationcoord
 
   # Use this to move units
@@ -326,10 +299,10 @@ class Gamestate:
     dist = distance(thing.coord, destinationcoord)
     if thing.move < dist:
       print(
-      	'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
-      	'is {max}sq / {maxin}")').format(
-		      real=dist, realin=inches(dist), 
-		      max=thing.move, maxin=inches(thing.move))
+        'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
+        'is {max}sq / {maxin}")').format(
+          real=dist, realin=inches(dist), 
+          max=thing.move, maxin=inches(thing.move))
       return
     elif self.thingat(destinationcoord):
       print('Sorry, unit cant move to occupied coord')
@@ -351,10 +324,10 @@ class Gamestate:
     dist = distance(shooter.coord, target.coord)
     if shooter.rng < dist:
       print(
-      	'Sorry, target is out of range ({real}sq / {realin}", ' +
-      	'range: {max}sq / {maxin}")').format(
-		      real=dist, realin=inches(dist),
-	      	max=shooter.rng, maxin=inches(shooter.rng))
+        'Sorry, target is out of range ({real}sq / {realin}", ' +
+        'range: {max}sq / {maxin}")').format(
+          real=dist, realin=inches(dist),
+          max=shooter.rng, maxin=inches(shooter.rng))
       return
 
     print ' ' + conjugateplural(shooter.quantity, "shooter") + "..."
@@ -560,11 +533,11 @@ class Game:
           return
         targetcoord = Game.parsecoord(words[1])
         if targetcoord:
-        	thing = self.gamestate.thingat(targetcoord)
-        	if thing:
-        		thing.printinfo()
-        		return
-    		print('Error, i dont know what you want to look at in given coord')
+          thing = self.gamestate.thingat(targetcoord)
+          if thing:
+            thing.printinfo()
+            return
+        print('Error, i dont know what you want to look at in given coord')
     # units command, format 'squads', 'units', etc
     # prints detailed summary of all units, models etc
     elif words[0] in ['squads', 'units']:
@@ -613,8 +586,8 @@ class Game:
       # check for out of bounds TODO
       spawncoord = Game.parsecoord(words[2])
       if not spawncoord or (
-	      	spawncoord[0] < 0 or spawncoord[0] >= HEIGHT or 
-	      	spawncoord[1] < 0 or spawncoord[1] >= WIDTH):
+          spawncoord[0] < 0 or spawncoord[0] >= HEIGHT or 
+          spawncoord[1] < 0 or spawncoord[1] >= WIDTH):
         print('Error, new command out of bounds or otherwise invalid')
         return
       newunit = Unit.new(words[1])
@@ -652,15 +625,15 @@ class Game:
               print('error, couldnt parse context sensitive unit command')
               return
           else:
-	          # they want to shoot at target (or assault later)
-	          # TODO check if both friendlies,
-	          # then if so move first towards the second.
-	          self.gamestate.shoot(unit, target)
+            # they want to shoot at target (or assault later)
+            # TODO check if both friendlies,
+            # then if so move first towards the second.
+            self.gamestate.shoot(unit, target)
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
     elif cmd == 'legend' or cmd == 'directions' or cmd == 'rose':
-    	print(legend)
+      print(legend)
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
