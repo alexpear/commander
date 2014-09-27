@@ -133,7 +133,8 @@ class Thing:
 # Color is the terminal display color
 class Unit(Thing):
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
-      shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1, quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
+      shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
+      quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
     self.name = name
     self.sprite = '?' # until Gamestate's add_thing() is called
     self.move = move
@@ -161,14 +162,19 @@ class Unit(Thing):
     # later store wargear (or wargear stats), state, other stats from notes
 
   def printinfo(self):
-    string = "{coord} {name} x{quant}, WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}".format(
-      coord=Game.coordtostring(self.coord), name=self.name.capitalize(), quant=self.quantity, ws=self.ws,
-      bs=self.bs, s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld, sv=self.sv, pt=self.pt)
+    string = (
+	    "{coord} {name} x{quant}, " +
+      "WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}").format(
+	      coord=Game.coordtostring(self.coord), name=self.name.capitalize(),
+	      quant=self.quantity, ws=self.ws, bs=self.bs, s=self.s, t=self.t,
+	      w=self.w, i=self.i, a=self.a, ld=self.ld,
+	      sv=self.sv, pt=self.pt)
     print string
 
   # TODO unused so far
   def sprite(self, charcount=3, colorkey='black'):
-    return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  # untested
+    return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  
+    # untested
 
   # types = {'space marine' : }
 
@@ -198,7 +204,7 @@ class Unit(Thing):
     elif lowercasename.startswith('cadet'):
       new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
         shootstr=3, ap=7, rng=3, weaponshots=2,
-        quantity=20, move=1, pt=6)
+        quantity=15, move=1, pt=6)
     else:
       print 'error, i did not recognize Unit typename. im giving it default stats.'
       new_unit = Unit(typename)
@@ -282,8 +288,11 @@ class Gamestate:
     # assuming the Thing is a Unit (or Model maybe?)
     dist = distance(thing.coord, destinationcoord)
     if thing.move < dist:
-      print 'Sorry, unit cant move that far ({real}sq / {realin}", but move is {max}sq / {maxin}")'.format(
-        real=dist, realin=inches(dist), max=thing.move, maxin=inches(thing.move))
+      print(
+      	'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
+      	'is {max}sq / {maxin}")').format(
+		      real=dist, realin=inches(dist), 
+		      max=thing.move, maxin=inches(thing.move))
       return
     elif self.thingat(destinationcoord):
       print('Sorry, unit cant move to occupied coord')
@@ -305,8 +314,11 @@ class Gamestate:
     print shooter.name + ' is shooting at ' + target.name
     dist = distance(shooter.coord, target.coord)
     if shooter.rng < dist:
-      print 'Sorry, target is out of range ({real}sq / {realin}", range: {max}sq / {maxin}")'.format(
-        real=dist, realin=inches(dist), max=shooter.rng, maxin=inches(shooter.rng))
+      print(
+      	'Sorry, target is out of range ({real}sq / {realin}", ' +
+      	'range: {max}sq / {maxin}")').format(
+		      real=dist, realin=inches(dist),
+	      	max=shooter.rng, maxin=inches(shooter.rng))
       return
 
     print ' ' + conjugateplural(shooter.quantity, "shooter") + "..."
@@ -592,6 +604,7 @@ class Game:
           # they want to shoot at target (or assault later)
           # TODO check if both friendlies, then move first towards the second.
           self.gamestate.shoot(unit, target)
+      # TODO command that asks for info about a specific sprite 
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
@@ -637,17 +650,11 @@ TODO:
 -basic act() behavior for a bot-controlled unit
 -rapid fire, heavy etc rules
  -track moved, shot per unit
-    
+-spawn random units 
+ -prereq?: store unit stats as dict? 
+-simple assault, obv
+-printinfo command for a specific unit?     
 
-  paste from offtopic 2014-01-10 or so
-  MRB path sketching
-  -gamestate, grid of arbitrary models/Models/actors/pieces/markers
-  -40k scale, all units & vehicles fit into one square for now
-  -method to print grid summary to console
-  -input loop, robust if possible
-  -method to print 'detail view' of a single square
-  -console methods to issue commands (move, etc): 
-    -specify a square (ie move everything there) or somehow 
-     something within a square to a destination. (everything 
-     teleports for now, physical tabletop metaphor)
-  '''
+
+
+'''
