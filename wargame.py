@@ -156,6 +156,7 @@ class Unit(Thing):
     self.move_left = self.move
     self.size = 20
     self.quantity = quantity
+    # TODO track allegiance as pointer to Army object, etc?
     self.allegiance = allegiance
     self.coord = [888,888]
     # most of these are pretty debug
@@ -492,13 +493,16 @@ class Game:
   # else return None
   @classmethod
   def parsecoord(cls, coordstring):
+    # We allow either the 0th or 1st char to be digit,
+    # because 0th char might be a '-' for a negative number
     if (coordstring.find(',') is not -1 and
-        coordstring[0].isdigit() and
+        (coordstring[0].isdigit() or coordstring[1].isdigit()) and
         coordstring[-1].isdigit()):
       halves = coordstring.strip().split(',')
       coord = [int(halves[0]), int(halves[1])]
-      if coord[0] < 0 or coord[0] >= HEIGHT or coord[1] < 0 or coord[1] >= WIDTH:
-        print 'BTW: parsed coordinate not on board'
+      # commented this check out because doesn't apply to relative coord inputs
+      # if coord[0] < 0 or coord[0] >= HEIGHT or coord[1] < 0 or coord[1] >= WIDTH:
+        # print 'BTW: parsed coordinate not on board'
       return coord
     else:
       return None
@@ -591,23 +595,28 @@ class Game:
           target = self.gamestate.unit_from_sprite(rawwords[-1])
           if target is None:
             # alternately see if last word is in coord format
-            coord = Game.parsecoord(words[-1])
-            if coord:
-              target = self.gamestate.thingat(coord)
+            # NOTE: assume relative not absolute coord
+            rel_coord = Game.parsecoord(words[-1])
+            if rel_coord:
+              abs_coord = coord_sum(unit.coord, rel_coord)
+              target = self.gamestate.thingat(abs_coord)
               if target is None:
                 # they want to move
-                self.gamestate.move(unit, coord)
+                self.gamestate.move(unit, abs_coord)
                 self.gamestate.printgrid()
                 return
             else:
               print('error, couldnt parse context sensitive unit command')
-          # they want to shoot at target (or assault later)
-          # TODO check if both friendlies, then move first towards the second.
-          self.gamestate.shoot(unit, target)
-      # TODO command that asks for info about a specific sprite 
+              return
+          else:
+	          # they want to shoot at target (or assault later)
+	          # TODO check if both friendlies,
+	          # then if so move first towards the second.
+	          self.gamestate.shoot(unit, target)
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
+    # TODO command that asks for info about a specific sprite 
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
