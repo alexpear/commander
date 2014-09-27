@@ -630,22 +630,13 @@ g.gamestate.printgrid()
 g.run()
 
 
-
-
-
 '''
 TODO: 
+-move some conceptual sections out into separate files/modules
 -unique sprites
  -s and S
  -max 2 of each of same unit for now  
   -later can add ' / prime notation, for 4 repeats
- -determine which gets lowercase sprite by looking over which units already 
-  exist at unit creation?
- -want to be able to refer to units by sprite, ideally:
-  -s 3,5
-   -means s should move, shoot, or assault to/at coord 3,5, depending on context
-    / which phase we're in. 
--move some conceptual sections out into separate files/modules
 -each unit having an army alignment
 -basic act() behavior for a bot-controlled unit
 -rapid fire, heavy etc rules
@@ -654,6 +645,10 @@ TODO:
  -prereq?: store unit stats as dict? 
 -simple assault, obv
 -printinfo command for a specific unit?     
+-clean up tabs and end-of-line whitespace in files
+-relative move instead of absolute-coord move
+
+
 
 
 
