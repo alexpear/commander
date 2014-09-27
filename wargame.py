@@ -2,24 +2,24 @@
 # -*- coding: utf-8 -*-
 # ? 
 
-import data
-from math import sqrt
-from random import randint
+import unit_modu
+import math
+import random
+# from math import sqrt
+# from random import randint
 
 '''
 my 'wargame' is cool, but /this/ copy of the file 
 is being slowly converted into a simplified 40k rules game. 
-6"x6" grid instead of continuous space. 
-'''
+6"x6" grid instead of continuous space.  
 
+turn based strategy wargame
+40k style
+eventually graphical
+prototype
+simple stats
+first shooting-only, then melee
 '''
-  turn based strategy wargame
-  roughly 40k style
-  eventually graphical
-  prototype
-  simple stats
-  first shooting-only, then melee
-  '''
 
 # global methods, maybe clumsy:
 
@@ -127,101 +127,6 @@ HEIGHT = 8
 class Square:
   def __init__(self):
     self.terrain = None
-
-class Thing:
-  def __init__(self):
-    self.name = 'traitless thing'
-    self.coord = [999,999]
-
-# for now, forget about being made up of Models / Creatures and Components
-# Units have stats directly
-# including a quantity stat
-# only one (ranged) weapon each (for now)
-# Units assumed homogenous for this prototype
-# Color is the terminal display color
-class Unit(Thing):
-  def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
-      shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
-      quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
-    self.name = name
-    self.sprite = '?' # until Gamestate's add_thing() is called
-    self.move = move
-    self.ws = ws
-    self.bs = bs
-    self.s = s
-    self.t = t
-    self.w = w
-    self.i = i
-    self.a = a
-    self.ld = ld
-    self.sv = sv
-    self.shootstr = shootstr
-    self.ap = ap
-    self.rng = rng
-    self.weapontype = weapontype
-    self.shotspercreature = weaponshots # to remove
-    self.pt = pt
-    self.move_left = self.move
-    self.size = 20
-    self.quantity = quantity
-    # TODO track allegiance as pointer to Army object, etc?
-    self.allegiance = allegiance
-    self.coord = [888,888]
-    # most of these are pretty debug
-    # later store wargear (or wargear stats), state, other stats from notes
-
-  def printinfo(self):
-    string = (
-      "{coord} {name} x{quant}, " +
-      "WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld} Sv{sv}+ Pt{pt}").format(
-        coord=Game.coordtostring(self.coord), name=self.name.capitalize(),
-        quant=self.quantity, ws=self.ws, bs=self.bs, s=self.s, t=self.t,
-        w=self.w, i=self.i, a=self.a, ld=self.ld,
-        sv=self.sv, pt=self.pt)
-    print string
-
-  # TODO unused so far
-  def sprite(self, charcount=3, colorkey='black'):
-    return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  
-    # untested
-
-  # alternate way of storing: as Wargear and Unit or UnitProfile objects, 
-  # constructed here at start. Positional constructors would mean not retyping 
-  # 'ld' each time. But less readable i suppose.
-
-  @classmethod
-  def new(cls, typename, allegiance='rebels'):
-    # later, use types list above
-    lowercasename = typename.lower()
-    # Tactical Squad
-    if lowercasename.startswith('tactical'):
-      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-        shootstr=4, ap=5, rng=2, weaponshots=2,
-        quantity=10, move=1, pt=16)
-    # Assault Marines
-    elif lowercasename.startswith('assault'):
-      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
-        shootstr=4, ap=5, rng=2, quantity=10, move=2, pt=22)
-    # Devastator Squad of 4, w/ lascannons:
-    elif lowercasename.startswith('devastator'):
-      new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-        shootstr=9, ap=2, rng=8, quantity=4, move=1, pt=26)
-    # Siege/Sapper Imperial Guard troops
-    elif lowercasename.startswith('siege'):
-      new_unit = Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
-        shootstr=3, ap=7, rng=2, weaponshots=2,
-        quantity=20, move=1, pt=9)
-    # Cadia-esque cadets, also Ender's G, that one Halo series
-    elif lowercasename.startswith('cadet'):
-      new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
-        shootstr=3, ap=7, rng=3, weaponshots=2,
-        quantity=15, move=1, pt=6)
-    else:
-      print 'error, i did not recognize Unit typename. im giving it default stats.'
-      new_unit = Unit(typename)
-
-    new_unit.allegiance = allegiance
-    return new_unit
 
 # a shot or attack in shooting or assault. 
 # Can also become a hit, wound, unsaved wound at various times. 
@@ -391,7 +296,7 @@ class Gamestate:
       print ' Now target has ' + str(target.quantity) + ' creatures left in it.'
 
   def spawn_unit(self, typename, coord, allegiance='rebels'):
-    unit = Unit.new(typename, allegiance)
+    unit = unit_modu.new(typename, allegiance)
     self.add_thing(unit)
     self.debug_move(unit, coord)
 
@@ -495,10 +400,6 @@ class Game:
   def __init__(self):
     self.gamestate = Gamestate()
 
-  @classmethod
-  def coordtostring(cls, coord):
-    return "{0},{1}".format(coord[0],coord[1])
-
   # if coord is correctly formatted (eg '4,8' with no spaces) return as [4,8]
   # else return None
   @classmethod
@@ -592,7 +493,7 @@ class Game:
           spawncoord[1] < 0 or spawncoord[1] >= WIDTH):
         print('Error, new command out of bounds or otherwise invalid')
         return
-      newunit = Unit.new(words[1])
+      newunit = unit_modu.new(words[1])
       self.gamestate.add_thing(newunit)
       self.gamestate.debug_move(newunit, spawncoord)
       self.gamestate.printgrid()
@@ -627,7 +528,7 @@ class Game:
               print('error, couldnt parse context sensitive unit command')
               return
           else:
-            # they want to shoot at target (or assault later)
+            # they want to shoot at target (or assault TODO)
             # TODO check if both friendlies,
             # then if so move first towards the second.
             self.gamestate.shoot(unit, target)
@@ -636,6 +537,13 @@ class Game:
             + 'command, but i cant find a unit with that initial')
     elif cmd == 'legend' or cmd == 'directions' or cmd == 'rose':
       print(legend)
+    elif cmd in ('rebels', 'go', 'enemies', 'enemy turn'):
+      for unit in self.gamestate.things:
+        if unit.allegiance == 'rebels':
+          print('\n {name} ({sprite}) is acting:'.format(
+            name=unit.name, sprite=unit.sprite))
+          self.gamestate.act(unit)
+    # TODO also ability to make protectorate auto-take its turn
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
@@ -675,6 +583,9 @@ TODO:
  -cover
  -difficult terrain
  -impassible terrain 
+-method to make all rebels act()?
+ -before each, print who is about to act
+  -print as name or as sprite? both perhaps 
 
 
 lower priority:
@@ -684,12 +595,10 @@ lower priority:
 
 
 so what can i module out?
--unit_types dicts etc
 -Game vs Gamestate?
  -could Gamestate be its own module? 
 -maybe a class for global methods?
  -some could go into class Game, some cant
--class Unit 
 
 
 
