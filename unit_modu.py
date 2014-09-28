@@ -15,7 +15,7 @@ def save_to_string(save_value):
   else:
     return '{val}+'.format(val=save_value)
 
-class Thing:
+class Thing(object):
   def __init__(self):
     self.name = 'traitless thing'
     self.coord = [999,999]
@@ -27,6 +27,7 @@ class Thing:
 # Units assumed homogenous for this prototype
 # Color is the terminal display color
 class Unit(Thing):
+  # deprecated. Instead read from data.py dicts 
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
       shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
       quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
@@ -73,15 +74,29 @@ class Unit(Thing):
     return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  
     # untested
 
-  # alternate way of storing: as Wargear and Unit or UnitProfile objects, 
-  # constructed here at start. Positional constructors would mean not retyping 
-  # 'ld' each time. But less readable i suppose.
+# TODO later just move this __dict__.update(stats from data.py) code to Unit() 
+def unit_from_stats_entry(stats_dict):
+  new_unit = Unit()
+  new_unit.__dict__.update(stats_dict)
+  return new_unit
+
+# TODO: or should we have short_name be the unit key in the dict? 
+def unit_from_short_name(type_name):
+  for faction in data.unit_stats:
+    for stats_entry in faction:
+      if type_name.startswith(stats_entry['short_name']):
+        # we have found it
+        return unit_from_stats_entry(stats_entry)
+  return None
 
 def new(typename, allegiance='rebels'):
   # later, use types list above
   lowercasename = typename.lower()
   # Tactical Squad
   if lowercasename.startswith('tactical'):
+    # testing out reading from data.py 
+
+
     new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
       shootstr=4, ap=5, rng=2, weaponshots=2,
       quantity=10, move=1, pt=16)
