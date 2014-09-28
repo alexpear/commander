@@ -59,12 +59,12 @@ class Unit(Thing):
 
   def printinfo(self):
     string = (
-      "{coord} {name} x{quant}\n" +
+      "{coord} {name} ({sprite}) x{quant}\n" +
       "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
-      "{sv_type} save: {sv}, {pt} points each").format(
+      "{sv_type} save: {sv}, {pt} points each\n").format(
         coord=coordtostring(self.coord), name=self.name.capitalize(),
-        quant=self.quantity, ws=self.ws, bs=self.bs, s=self.s, t=self.t,
-        w=self.w, i=self.i, a=self.a, ld=self.ld,
+        sprite=self.sprite, quant=self.quantity, ws=self.ws, bs=self.bs,
+        s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
         sv=save_to_string(self.sv), sv_type='armor', pt=self.pt)
     print string
 
