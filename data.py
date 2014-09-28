@@ -4,6 +4,11 @@
 
 # data dicts about game rules, unit stats, etc 
 
+# alternate way of storing: as Wargear and Unit or UnitProfile objects, 
+# constructed here at start. Positional constructors would mean not retyping 
+# 'ld' each time. But less readable i suppose. 
+# Make readable with well labeled columns?
+
 wargear_stats = {
   'bolt pistol': {
     's': 4, 'ap': 5, 'range': 2, 'type': 'pistol', 'shots': 1
