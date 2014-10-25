@@ -9,12 +9,8 @@ import random
 # from random import randint
 
 '''
-my 'wargame' is cool, but /this/ copy of the file 
-is being slowly converted into a simplified 40k rules game. 
-6"x6" grid instead of continuous space.  
-
 turn based strategy wargame
-40k style
+6"x6" grid instead of continuous space.  
 eventually graphical
 prototype
 simple stats
