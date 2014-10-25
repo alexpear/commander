@@ -82,11 +82,13 @@ def unit_from_stats_entry(stats_dict):
 
 # TODO: or should we have short_name be the unit key in the dict? 
 def unit_from_short_name(type_name):
-  for faction in data.unit_stats:
-    for stats_entry in faction:
-      if type_name.startswith(stats_entry['short_name']):
+  for faction in data.unit_stats.itervalues():
+    for unit_dict in faction.itervalues():
+      if type_name.startswith(unit_dict['short_name']):
         # we have found it
-        return unit_from_stats_entry(stats_entry)
+        unit = unit_from_stats_entry(unit_dict)
+        unit.name = type_name
+        return unit
   return None
 
 def new(typename, allegiance='rebels'):
@@ -95,11 +97,10 @@ def new(typename, allegiance='rebels'):
   # Tactical Squad
   if lowercasename.startswith('tactical'):
     # testing out reading from data.py 
-
-
-    new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-      shootstr=4, ap=5, rng=2, weaponshots=2,
-      quantity=10, move=1, pt=16)
+    new_unit = unit_from_short_name(lowercasename)
+    # new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
+    #   shootstr=4, ap=5, rng=2, weaponshots=2,
+    #   quantity=10, move=1, pt=16)
   # Assault Marines
   elif lowercasename.startswith('assault'):
     new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
