@@ -78,6 +78,7 @@ class Unit(Thing):
 def unit_from_stats_entry(stats_dict):
   new_unit = Unit()
   new_unit.__dict__.update(stats_dict)
+  # TODO: wargear / weapons
   return new_unit
 
 # TODO: or should we have short_name be the unit key in the dict? 
