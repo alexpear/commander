@@ -121,12 +121,15 @@ class Attack:
     self.specials = specials
     self.active = True
 
+# TODO: make a class Util
+
 # returns coord of form [0, -1] or [-1, 1], etc suggesting
 # the rough direction from coords a to b.
 # Only returns integer coordinates, so 9 possible return values (inc 0,0).
 # used for Gamestate.act(). Kindof hacky.
 def direction_from(a, b):
   diff_coord = [b[0] - a[0], b[1] - a[1]]
+  # This function is sometimes called sign()
   def one_zero_minusone(x):
     if x > 0:
       return 1
@@ -411,6 +414,7 @@ class Game:
     else:
       return None
 
+  # todo low priority: make this cascade into something neater
   def parseinput(self, rawstring):
     if rawstring == '':
       return
@@ -434,6 +438,7 @@ class Game:
             thing.printinfo()
             return
         print('Error, i dont know what you want to look at in given coord')
+
     # units command, format 'squads', 'units', etc
     # prints detailed summary of all units, models etc
     elif words[0] in ['squads', 'units']:
@@ -456,6 +461,7 @@ class Game:
       destinationcoord = Game.parsecoord(words[-1])
       self.gamestate.move(mover, destinationcoord)
       self.gamestate.printgrid()
+
     # shoot command, format 'shoot 2,3 at 4,1' or without the 'at'.
     elif words[0] in ('shoot', 'attack', 'fire'):
       if len(words) < 3 or (not words[1][0].isdigit()) or (not words[-1][0].isdigit()):
@@ -474,6 +480,7 @@ class Game:
           r=targetcoord[0], c=targetcoord[1])
         return
       self.gamestate.shoot(shooter, target)
+
     # new Unit command, format 'new strider 3,2' for now
     elif words[0]=='new':
       if (len(words) != 3) or (not words[2][0].isdigit()):
@@ -490,9 +497,11 @@ class Game:
       self.gamestate.add_thing(newunit)
       self.gamestate.debug_move(newunit, spawncoord)
       self.gamestate.printgrid()
+
     elif cmd.startswith('quit') or cmd.startswith('exit'):
       return True
     # context-sensitive command for a unit: TODO: clean up logic
+
     elif (self.gamestate.unit_from_sprite(rawstring.split()[0])):
       # how to do this without code duplication?
       rawwords = rawstring.split()
@@ -528,8 +537,10 @@ class Game:
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
+
     elif cmd == 'legend' or cmd == 'directions' or cmd == 'rose':
       print(legend)
+
     elif cmd in ('rebels', 'go', 'enemies', 'enemy turn'):
       for unit in self.gamestate.things:
         if unit.allegiance == 'rebels':
@@ -537,6 +548,8 @@ class Game:
             name=unit.name, sprite=unit.sprite))
           self.gamestate.act(unit)
     # TODO also ability to make protectorate auto-take its turn
+
+    # elif cmd in ('newgame', 'new game', 'start over', 'reset'):      
     else:
       print ''
       print 'Sorry, i don\'t know what you\'re trying to say.'
