@@ -104,35 +104,40 @@ def unit_from_short_name(type_name):
 def new(typename, allegiance='rebels'):
   # later, use types list above
   lowercasename = typename.lower()
-  # Tactical Squad
-  if lowercasename.startswith('tactical'):
-    # testing out reading from data.py 
-    new_unit = unit_from_short_name(lowercasename)
+  new_unit = unit_from_short_name(lowercasename)
     # new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
     #   shootstr=4, ap=5, rng=2, weaponshots=2,
     #   quantity=10, move=1, pt=16)
-  # Assault Marines
-  elif lowercasename.startswith('assault'):
-    new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
-      shootstr=4, ap=5, rng=2, quantity=10, move=2, pt=22)
-  # Devastator Squad of 4, w/ lascannons:
-  elif lowercasename.startswith('devastator'):
-    new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-      shootstr=9, ap=2, rng=8, quantity=4, move=1, pt=26)
-  # Siege/Sapper Imperial Guard troops
-  elif lowercasename.startswith('siege'):
-    new_unit = Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
-      shootstr=3, ap=7, rng=2, weaponshots=2,
-      quantity=20, move=1, pt=9)
-  # Cadia-esque cadets, also Ender's G, that one Halo series
-  elif lowercasename.startswith('cadet'):
-    new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
-      shootstr=3, ap=7, rng=3, weaponshots=2,
-      quantity=15, move=1, pt=6)
-  else:
-    print 'error, i did not recognize Unit typename. im giving it default stats.'
-    new_unit = Unit(typename)
-
+  # # Assault Marines
+  # elif lowercasename.startswith('assault'):
+  #   new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
+  #     shootstr=4, ap=5, rng=2, quantity=10, move=2, pt=22)
+  # # Devastator Squad of 4, w/ lascannons:
+  # elif lowercasename.startswith('devastator'):
+  #   new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
+  #     shootstr=9, ap=2, rng=8, quantity=4, move=1, pt=26)
+  # # Siege/Sapper Imperial Guard troops
+  # elif lowercasename.startswith('siege'):
+  #   new_unit = Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
+  #     shootstr=3, ap=7, rng=2, weaponshots=2,
+  #     quantity=20, move=1, pt=9)
+  # # Cadia-esque cadets, also Ender's G, that one Halo series
+  # elif lowercasename.startswith('cadet'):
+  #   new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
+  #     shootstr=3, ap=7, rng=3, weaponshots=2,
+  #     quantity=15, move=1, pt=6)
+  # else:
+  #   print 'error, i did not recognize Unit typename. im giving it default stats.'
+  #   new_unit = Unit(typename)
   new_unit.allegiance = allegiance
   return new_unit
 
+def random_from_faction(faction, allegiance='rebels'):
+  # get list of avail unit types (typenames)
+  types = data.unit_stats[faction].keys()
+  if len(types) <= 0:
+    return new('mari', allegiance)
+  # and get a random of the typenames
+  # and call new with it
+  else:
+    return new(random.choice(types), allegiance)

@@ -282,20 +282,19 @@ class Gamestate:
       self.damage(target, len(unsaved_wounds))
       print ' Now target has ' + str(target.quantity) + ' creatures left in it.'
 
-  def spawn_unit(self, typename, coord, allegiance='rebels'):
-    unit = unit_modu.new(typename, allegiance)
+  def spawn_unit(self, faction, coord, allegiance='rebels'):
+    unit = unit_modu.random_from_faction(faction, allegiance)
     self.add_thing(unit)
     self.debug_move(unit, coord)
 
   def spawndebugunits(self):
     # protectorate side (north)
-    self.spawn_unit("Devastator squad", [1,7], 'protectorate')
-    self.spawn_unit("Assault marines", [1,4], 'protectorate')
+    self.spawn_unit("unsc", [1,7], 'protectorate')
+    self.spawn_unit("unsc", [1,4], 'protectorate')
 
     # rebels side (south)
-    self.spawn_unit("Cadets", [7,2], 'rebels')
-    self.spawn_unit("Tactical squad", [6,5], 'rebels')
-    self.spawn_unit("Cadets", [7,9], 'rebels')
+    self.spawn_unit("unsc", [7,2], 'rebels')
+    self.spawn_unit("unsc", [7,9], 'rebels')
 
   # tag Gamestate init gamestate __init__()
   def __init__(self):
