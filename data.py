@@ -153,6 +153,14 @@ unit_stats = {
     }
   },
   'unsc': {
+    'cadet platoon': {
+      'short_name': 'cadet',
+      'ws':3, 'bs':3, 's':3, 't':3, 'w':1, 'i':3, 'a':1, 'ld':6, 'sv':6,
+      'wargear': ['lasgun'],
+      'type': 'infantry',
+      'pt':6,
+      'quantity': 20
+    },
     'marine platoon': {
       'short_name': 'marine',
       'ws':3, 'bs':3, 's':3, 't':3, 'w':1, 'i':3, 'a':1, 'ld':7, 'sv':5,
@@ -168,9 +176,16 @@ unit_stats = {
       'type': 'infantry',
       'pt':7,
       'quantity': 10
+    },
+    'spartan operative': {
+      'short_name': 'spartan',
+      'ws':4, 'bs':4, 's':4, 't':4, 'w':2, 'i':4, 'a':2, 'ld':8, 'sv':3,
+      'wargear': ['battle rifle'],
+      'type': 'infantry',
+      'pt':20,
+      'quantity': 1
     }
   }
   # 'covenant': {
-    
   # }
 }
