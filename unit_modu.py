@@ -59,20 +59,28 @@ class Unit(Thing):
     # later store wargear (or wargear stats), state, other stats from notes
 
   def printinfo(self):
+    alleg = 'PRO'
+    if self.allegiance == 'rebels':
+      alleg = 'REB'
+
     string = (
-      "{coord} {name} ({sprite}) x{quant}\n" +
+      "{coord} {name} ({sprite}) x{quant} {allegiance}\n" +
       "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
       "{sv_type} save: {sv}, {pt} points each\n").format(
         coord=coordtostring(self.coord), name=self.name.capitalize(),
-        sprite=self.sprite, quant=self.quantity, ws=self.ws, bs=self.bs,
+        sprite=self.sprite, quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
         sv=save_to_string(self.sv), sv_type='armor', pt=self.pt)
     print string
 
-  # TODO unused so far
-  def sprite(self, charcount=3, colorkey='black'):
-    return '\x1b[' + colordict[colorkey] + self.name[:charcount] + '\x1b[0m'  
-    # untested
+  # TODO ability to refer to them by shortcuts while being 2-3 letters long
+  def get_sprite(self, charcount=1, colorkey='red'):
+    if self.allegiance.startswith('rebel'):
+      colorkey = 'red'
+    else:
+      colorkey = 'blue'
+    # return '\x1b[' + data.colordict[colorkey] + self.name[:charcount].capitalize() + '\x1b[0m'  
+    return '\x1b[' + data.colordict[colorkey] + self.sprite + '\x1b[0m'  
 
 # TODO later just move this __dict__.update(stats from data.py) code to Unit() 
 def unit_from_stats_entry(stats_dict):
