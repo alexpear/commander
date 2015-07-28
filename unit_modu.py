@@ -3,6 +3,7 @@
 # ? 
 
 import data
+import random
 
 # TODO probably should be in some global string utilities file
 # or unit's printinfo() should be in Game

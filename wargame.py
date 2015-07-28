@@ -137,25 +137,32 @@ def direction_from(a, b):
   return [one_zero_minusone(diff_coord[0]),
           one_zero_minusone(diff_coord[1])]
 
+def next_letter(letter):
+  return chr(ord(letter) + 1)
+
 class Gamestate:
+  # a 'sprite' here is an ascii-graphics character
+  def sprite_is_taken(self, sprite):
+    for thing in self.things:
+      if thing.sprite == sprite:
+        return True
+    return False
+
+  def choose_sprite(self, thing):
+    # If not taken, return first letter of its name, ideally lowercase.
+    new_sprite = thing.name[0].lower()
+    while self.sprite_is_taken(new_sprite):
+      # Next try uppercase version
+      new_sprite = new_sprite.upper()
+      if not self.sprite_is_taken(new_sprite):
+        return new_sprite
+      # Failing that, resort to the next free letter in the alphabet
+      new_sprite = next_letter(new_sprite).lower()
+
+    return new_sprite
+
   def add_thing(self, newthing):
-    # choose sprite for newthing
-    # first choice, lower sprite. upper if necessary. (lower is easier to type)
-    lower_sprite = newthing.name[0].lower()
-    upper_sprite = newthing.name[0].upper()
-    lower_name_collision = False
-    for oldthing in self.things:
-      if oldthing.sprite == upper_sprite:
-        print('cant add ' + newthing.name +
-              ' because we already have this uppercase sprite')
-        return
-      if oldthing.sprite == lower_sprite:
-        lower_name_collision = True
-    if lower_name_collision:
-      newthing.sprite = upper_sprite
-    else:
-      newthing.sprite = lower_sprite
-    # add newthing to the list
+    newthing.sprite = self.choose_sprite(newthing)
     self.things.append(newthing)
 
   # Called when a unit takes wounds
@@ -333,7 +340,7 @@ class Gamestate:
         if thing == None:
           print ' ',
         else:
-          print thing.sprite,
+          print thing.get_sprite(),
       print '| ' + str(r)
     print '    - - - - - - - - - - - -'
     print '    0 1 2 3 4 5 6 7 8 9 X E'
