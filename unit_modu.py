@@ -39,6 +39,7 @@ class Unit(Thing):
     self.s = s
     self.t = t
     self.w = w
+    self.wounds_taken = 0
     self.i = i
     self.a = a
     self.ld = ld

@@ -158,13 +158,16 @@ class Gamestate:
     # add newthing to the list
     self.things.append(newthing)
 
-  # called when a unit takes wounds
+  # Called when a unit takes wounds
   def damage(self, unit, wounds):
-    # TODO: multiwound model support
-    unit.quantity -= wounds
-    if unit.quantity <= 0:
-      self.things.remove(unit)
-      # TODO call this with more fanfare and ceremony?
+    unit.wounds_taken += wounds
+    if unit.wounds_taken >= unit.w:
+      # The floors could be overkill idk.
+      casualties = math.floor(unit.wounds_taken) / math.floor(unit.w)
+      unit.quantity -= casualties
+      if unit.quantity <= 0:
+        self.things.remove(unit)
+        # TODO call this with more fanfare and ceremony?
     # TODO once turns are implemented, track casualties per turn
     # because of 25% thing, etc
 
