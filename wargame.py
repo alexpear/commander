@@ -10,7 +10,7 @@ import random
 
 '''
 turn based strategy wargame
-6"x6" grid instead of continuous space.  
+6"x6" grid instead of continuous space.
 eventually graphical
 prototype
 simple stats
@@ -52,7 +52,7 @@ def distance(a, b):
 def coord_sum(a, b):
   return [a[0] + b[0], a[1] + b[1]]
 
-# TODO: more rolls, for Ld, to-hit, diff terrain, etc? 
+# TODO: more rolls, for Ld, to-hit, diff terrain, etc?
 def roll(logtext='Rolling', diecount=1, goal=None, wanthigh=True):
   if diecount <= 0:
     print 'roll 0 dice? nonsense!'
@@ -112,8 +112,8 @@ class Square:
   def __init__(self):
     self.terrain = None
 
-# a shot or attack in shooting or assault. 
-# Can also become a hit, wound, unsaved wound at various times. 
+# a shot or attack in shooting or assault.
+# Can also become a hit, wound, unsaved wound at various times.
 class Attack:
   def __init__(self, s, ap=7, specials=[]):
     self.s = s
@@ -205,7 +205,7 @@ class Gamestate:
       print(
         'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
         'is {max}sq / {maxin}")').format(
-          real=dist, realin=inches(dist), 
+          real=dist, realin=inches(dist),
           max=thing.move, maxin=inches(thing.move))
       return
     elif self.thingat(destinationcoord):
@@ -256,7 +256,7 @@ class Gamestate:
         attack.active = False
 
     # Attacks that do not hit, wound, etc are marked .active = False
-    # And then removed. Might be clumsy. 
+    # And then removed. Might be clumsy.
     hits = [a for a in attacks if a.active]
     print ' ' + conjugateplural(len(hits), "hit") + "..."
 
@@ -565,7 +565,6 @@ class Game:
       done = self.parseinput(rawinput)
     print 'Farewell.'
     return
-
 
 g = Game()
 g.gamestate.printgrid()

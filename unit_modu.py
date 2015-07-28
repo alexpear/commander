@@ -28,7 +28,7 @@ class Thing(object):
 # Units assumed homogenous for this prototype
 # Color is the terminal display color
 class Unit(Thing):
-  # deprecated. Instead read from data.py dicts 
+  # deprecated. Instead read from data.py dicts
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
       shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
       quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
@@ -81,17 +81,17 @@ class Unit(Thing):
       colorkey = 'red'
     else:
       colorkey = 'blue'
-    # return '\x1b[' + data.colordict[colorkey] + self.name[:charcount].capitalize() + '\x1b[0m'  
-    return '\x1b[' + data.colordict[colorkey] + self.sprite + '\x1b[0m'  
+    # return '\x1b[' + data.colordict[colorkey] + self.name[:charcount].capitalize() + '\x1b[0m'
+    return '\x1b[' + data.colordict[colorkey] + self.sprite + '\x1b[0m'
 
-# TODO later just move this __dict__.update(stats from data.py) code to Unit() 
+# TODO later just move this __dict__.update(stats from data.py) code to Unit()
 def unit_from_stats_entry(stats_dict):
   new_unit = Unit()
   new_unit.__dict__.update(stats_dict)
   # TODO: wargear / weapons
   return new_unit
 
-# TODO: or should we have short_name be the unit key in the dict? 
+# TODO: or should we have short_name be the unit key in the dict?
 def unit_from_short_name(type_name):
   for faction in data.unit_stats.itervalues():
     for unit_dict in faction.itervalues():
@@ -106,30 +106,6 @@ def new(typename, allegiance='rebels'):
   # later, use types list above
   lowercasename = typename.lower()
   new_unit = unit_from_short_name(lowercasename)
-    # new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-    #   shootstr=4, ap=5, rng=2, weaponshots=2,
-    #   quantity=10, move=1, pt=16)
-  # # Assault Marines
-  # elif lowercasename.startswith('assault'):
-  #   new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 2, 8, sv=3, 
-  #     shootstr=4, ap=5, rng=2, quantity=10, move=2, pt=22)
-  # # Devastator Squad of 4, w/ lascannons:
-  # elif lowercasename.startswith('devastator'):
-  #   new_unit = Unit(typename, 4, 4, 4, 4, 1, 4, 1, 8, sv=3, 
-  #     shootstr=9, ap=2, rng=8, quantity=4, move=1, pt=26)
-  # # Siege/Sapper Imperial Guard troops
-  # elif lowercasename.startswith('siege'):
-  #   new_unit = Unit(typename, 3, 3, 3, 3, 1, 3, 1, 6, sv=6, 
-  #     shootstr=3, ap=7, rng=2, weaponshots=2,
-  #     quantity=20, move=1, pt=9)
-  # # Cadia-esque cadets, also Ender's G, that one Halo series
-  # elif lowercasename.startswith('cadet'):
-  #   new_unit = Unit(typename, 2, 2, 3, 2, 1, 3, 1, 5, sv=7,
-  #     shootstr=3, ap=7, rng=3, weaponshots=2,
-  #     quantity=15, move=1, pt=6)
-  # else:
-  #   print 'error, i did not recognize Unit typename. im giving it default stats.'
-  #   new_unit = Unit(typename)
   new_unit.allegiance = allegiance
   return new_unit
 
