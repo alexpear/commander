@@ -185,6 +185,15 @@ class Gamestate:
     # TODO once turns are implemented, track casualties per turn
     # because of 25% thing, etc
 
+  def zone_of_control_blocks(self, coord, mover):
+    for other_thing in self.things:
+      if (other_thing.ws > 0 and
+          other_thing.allegiance != mover.allegiance and
+          distance(coord, other_thing.coord) <= 1 and
+          other_thing.quantity > 0):
+        return True
+    return False
+
   # Has less restrictions than move()
   def debug_move(self, thing, destinationcoord):
     if thing==None:
@@ -212,8 +221,13 @@ class Gamestate:
           real=dist, realin=inches(dist),
           max=thing.move, maxin=inches(thing.move))
       return
+
     elif self.thingat(destinationcoord):
       print('Sorry, unit cant move to occupied coord')
+      return
+
+    if self.zone_of_control_blocks(destinationcoord, thing):
+      print('Sorry, unit cant move within 1 sq of an enemy unit')
       return
 
     # TODO: other checks, asserts
