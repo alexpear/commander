@@ -327,15 +327,30 @@ class Gamestate:
     self.add_thing(thing)
 
   def spawndebugunits(self):
-    # Protectorate side (north)
-    self.spawn_unit("unsc", [1,7], 'protectorate')
-    self.spawn_unit("unsc", [1,4], 'protectorate')
+    # todo could invest in specifying scenario by grid of chars.
+    self.spawn_thing('chasm', [1,1])
 
-    # Terrain
-    self.spawn_thing('chasm', [4,5])
+    self.spawn_unit("unsc", [0,3], 'protectorate')
 
-    # Rebels side (south)
+    self.spawn_thing('chasm', [0,6])
+    self.spawn_thing('chasm', [1,6])
+
+    self.spawn_unit("unsc", [0,8], 'protectorate')
+
+    self.spawn_thing('chasm', [2,3])
+    self.spawn_thing('chasm', [3,3])
+    self.spawn_thing('chasm', [2,4])
+
+    self.spawn_thing('chasm', [4,6])
+    self.spawn_thing('chasm', [4,7])
+    self.spawn_thing('chasm', [4,8])
+    self.spawn_thing('chasm', [4,9])
+
     self.spawn_unit("unsc", [7,2], 'rebels')
+
+    self.spawn_thing('chasm', [7,5])
+    self.spawn_thing('chasm', [7,6])
+
     self.spawn_unit("unsc", [7,9], 'rebels')
 
   # tag Gamestate init gamestate __init__()
