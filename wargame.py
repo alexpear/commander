@@ -435,7 +435,7 @@ class Game:
         if targetcoord:
           thing = self.gamestate.thingat(targetcoord)
           if thing:
-            thing.printinfo()
+            thing.verbose_info()
             return
         print('Error, i dont know what you want to look at in given coord')
 
@@ -446,7 +446,7 @@ class Game:
         print 'Error, i can\'t understand this units command'
         return
       for thing in self.gamestate.things:
-        thing.printinfo()
+        print thing.verbose_info()
 
     # move command, format 'move 2,3 to 4,1' or 'move 2,3 4,1' for now
     elif words[0]=='move':

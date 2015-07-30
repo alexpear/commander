@@ -6,7 +6,7 @@ import data
 import random
 
 # TODO probably should be in some global string utilities file
-# or unit's printinfo() should be in Game
+# or unit's verbose_info() should be in Game
 def coordtostring(coord):
   return "{0},{1}".format(coord[0],coord[1])
 
@@ -17,9 +17,22 @@ def save_to_string(save_value):
     return '{val}+'.format(val=save_value)
 
 class Thing(object):
-  def __init__(self):
-    self.name = 'traitless thing'
-    self.coord = [999,999]
+  def __init__(self, name='traitless thing', coord=[999,999], sprite='?'):
+    self.name = name
+    self.coord = coord
+    self.sprite = sprite
+    self.allegiance = 'gaia'
+    self.quantity = 0
+    self.ws = 0
+
+  def get_sprite(self):
+    return self.sprite
+
+  def verbose_info(self):
+    string = (
+      "{coord} {name} ({sprite})\n").format(
+        coord=coordtostring(self.coord), name=self.name.capitalize(), sprite=self.get_sprite())
+    return string
 
 # for now, forget about being made up of Models / Creatures and Components
 # Units have stats directly
@@ -60,20 +73,19 @@ class Unit(Thing):
     # most of these are pretty debug
     # later store wargear (or wargear stats), state, other stats from notes
 
-  def printinfo(self):
-    alleg = 'PRO'
-    if self.allegiance == 'rebels':
-      alleg = 'REB'
+  def verbose_info(self):
+    alleg = self.allegiance[0:3].upper()
 
+    # TODO print WS BS etc in line over their values
     string = (
       "{coord} {name} ({sprite}) x{quant} {allegiance}\n" +
       "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
       "{sv_type} save: {sv}, {pt} points each\n").format(
         coord=coordtostring(self.coord), name=self.name.capitalize(),
-        sprite=self.sprite, quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
+        sprite=self.get_sprite(), quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
         sv=save_to_string(self.sv), sv_type='armor', pt=self.pt)
-    print string
+    return string
 
   # TODO ability to refer to them by shortcuts while being 2-3 letters long
   def get_sprite(self, charcount=1, colorkey='red'):
