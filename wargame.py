@@ -177,7 +177,8 @@ class Gamestate:
     if unit.wounds_taken >= unit.w:
       # The floors could be overkill idk.
       casualties = math.floor(unit.wounds_taken) / math.floor(unit.w)
-      unit.quantity -= casualties
+      # Maintain int type.
+      unit.quantity -= int(casualties)
       if unit.quantity <= 0:
         self.things.remove(unit)
         # TODO call this with more fanfare and ceremony?
