@@ -89,7 +89,7 @@ class Unit(Thing):
 
   # TODO ability to refer to them by shortcuts while being 2-3 letters long
   def get_sprite(self, charcount=1, colorkey='red'):
-    if self.allegiance.startswith('rebel'):
+    if self.allegiance.startswith('reb'):
       colorkey = 'red'
     else:
       colorkey = 'blue'
