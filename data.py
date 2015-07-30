@@ -174,7 +174,7 @@ unit_stats = {
       'ws':3, 'bs':4, 's':3, 't':3, 'w':1, 'i':3, 'a':1, 'ld':8, 'sv':4,
       'wargear': ['battle rifle'],
       'type': 'infantry',
-      'pt':7,
+      'pt':10,
       'quantity': 10
     },
     'spartan operative': {
