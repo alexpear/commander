@@ -152,6 +152,9 @@ class Gamestate:
     return False
 
   def choose_sprite(self, thing):
+    if thing.name == 'impassible terrain':
+      return '0'
+
     # If not taken, return first letter of its name, ideally lowercase.
     new_sprite = thing.name[0].lower()
     while self.sprite_is_taken(new_sprite):
@@ -302,7 +305,13 @@ class Gamestate:
     self.spawn_unit("unsc", [1,7], 'protectorate')
     self.spawn_unit("unsc", [1,4], 'protectorate')
 
-    # rebels side (south)
+    # Terrain
+    terr0 = unit_modu.Thing()
+    terr0.coord = [4,6]
+    terr0.name = 'impassible terrain'
+    self.add_thing(terr0)
+
+    # Rebels side (south)
     self.spawn_unit("unsc", [7,2], 'rebels')
     self.spawn_unit("unsc", [7,9], 'rebels')
 
@@ -367,16 +376,20 @@ class Gamestate:
   # TODO improve. Currently moves toward and shoots closest foe.
   def act(self, acting_unit):
     # First chooses closest foe as target:
-    chosen_target = self.things[0]
+    chosen_target = None
     shortest_so_far = 999 # shortest distance of a foe so far
     for other_unit in self.things:
-      if (other_unit.allegiance == acting_unit.allegiance or
+      if (other_unit.allegiance == 'gaia' or
+          other_unit.allegiance == acting_unit.allegiance or
           other_unit.quantity <= 0):
         continue  # invalid unit, not a foe
       dist = distance(other_unit.coord, acting_unit.coord)
       if dist < shortest_so_far:
         shortest_so_far = dist
         chosen_target = other_unit
+
+    if chosen_target == None:
+      return
 
     # Now moves toward target:
     # really hacky:
