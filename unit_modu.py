@@ -28,10 +28,13 @@ class Thing(object):
   def get_sprite(self):
     return self.sprite
 
+  def name_with_sprite(self):
+    return self.name + ' (' + self.get_sprite() + ')'
+
   def verbose_info(self):
     string = (
-      "{coord} {name} ({sprite})\n").format(
-        coord=coordtostring(self.coord), name=self.name.capitalize(), sprite=self.get_sprite())
+      "{coord} {name}\n").format(
+        coord=coordtostring(self.coord), name=self.name_with_sprite().capitalize())
     return string
 
 # for now, forget about being made up of Models / Creatures and Components
@@ -78,11 +81,11 @@ class Unit(Thing):
 
     # TODO print WS BS etc in line over their values
     string = (
-      "{coord} {name} ({sprite}) x{quant} {allegiance}\n" +
+      "{coord} {name} x{quant} {allegiance}\n" +
       "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
       "{sv_type} save: {sv}, {pt} points each\n").format(
-        coord=coordtostring(self.coord), name=self.name.capitalize(),
-        sprite=self.get_sprite(), quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
+        coord=coordtostring(self.coord), name=self.name_with_sprite().capitalize(),
+        quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
         sv=save_to_string(self.sv), sv_type='armor', pt=self.pt)
     return string

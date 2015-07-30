@@ -243,7 +243,7 @@ class Gamestate:
       return
     # more asserts? TODO
 
-    print shooter.name + ' is shooting at ' + target.name
+    print shooter.name_with_sprite() + ' is shooting at ' + target.name_with_sprite()
     dist = distance(shooter.coord, target.coord)
     if shooter.rng < dist:
       print(
@@ -580,8 +580,8 @@ class Game:
     elif cmd in ('rebels', 'go', 'enemies', 'enemy turn'):
       for unit in self.gamestate.things:
         if unit.allegiance == 'rebels':
-          print('\n {name} ({sprite}) is acting:'.format(
-            name=unit.name, sprite=unit.sprite))
+          print('\n {unit} is acting:'.format(
+            unit=unit.name_with_sprite()))
           self.gamestate.act(unit)
     # TODO also ability to make protectorate auto-take its turn
 
