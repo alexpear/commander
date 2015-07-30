@@ -152,8 +152,9 @@ class Gamestate:
     return False
 
   def choose_sprite(self, thing):
-    if thing.name == 'impassible terrain':
-      return '0'
+    # TODO later might be 'if thing.name in exception_list', terrain_names, etc
+    if thing.name == 'chasm':
+      return thing.sprite
 
     # If not taken, return first letter of its name, ideally lowercase.
     new_sprite = thing.name[0].lower()
@@ -310,10 +311,20 @@ class Gamestate:
       self.damage(target, len(unsaved_wounds))
       print ' Now target has ' + str(target.quantity) + ' creatures left in it.'
 
+  # TODO could unify this and spawn_thing
   def spawn_unit(self, faction, coord, allegiance='rebels'):
     unit = unit_modu.random_from_faction(faction, allegiance)
     self.add_thing(unit)
     self.debug_move(unit, coord)
+
+  def spawn_thing(self, name, coord):
+    thing = unit_modu.Thing(name=name, coord=coord)
+
+    # Cascade for populating special traits eg terrain:
+    if name == 'chasm':
+      thing.sprite = '0'
+
+    self.add_thing(thing)
 
   def spawndebugunits(self):
     # Protectorate side (north)
@@ -321,10 +332,7 @@ class Gamestate:
     self.spawn_unit("unsc", [1,4], 'protectorate')
 
     # Terrain
-    terr0 = unit_modu.Thing()
-    terr0.coord = [4,6]
-    terr0.name = 'impassible terrain'
-    self.add_thing(terr0)
+    self.spawn_thing('chasm', [4,5])
 
     # Rebels side (south)
     self.spawn_unit("unsc", [7,2], 'rebels')
