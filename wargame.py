@@ -316,7 +316,7 @@ class Gamestate:
     self.debug_move(unit, coord)
 
   def spawndebugunits(self):
-    # protectorate side (north)
+    # Protectorate side (north)
     self.spawn_unit("unsc", [1,7], 'protectorate')
     self.spawn_unit("unsc", [1,4], 'protectorate')
 
