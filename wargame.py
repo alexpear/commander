@@ -520,6 +520,19 @@ class Game:
                 self.gamestate.move(unit, abs_coord)
                 self.gamestate.printgrid()
                 return
+              else:
+                # TODO flip this branch
+                pass # TODO use target
+            # Alternately see if fits format 'V southwest', telling unit V to move one square southwest
+            elif (len(words) == 2 and
+                words[-1].lower() in cardinal_directions.keys()):
+              direction_coord = cardinal_directions[words[-1].lower()]
+              # TODO methodize; this will be same as the block above
+              absolute_destination = util.coord_sum(unit.coord, direction_coord)
+              # TODO could check if they want to shoot, same as above
+              self.gamestate.move(unit, absolute_destination)
+              self.gamestate.printgrid()
+              return
             else:
               print('error, couldnt parse context sensitive unit command')
               return
