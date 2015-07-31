@@ -71,6 +71,7 @@ def direction_from(a, b):
 def next_letter(letter):
   return chr(ord(letter) + 1)
 
+# TODO put Gamestate and Game in separate files
 class Gamestate:
   # a 'sprite' here is an ascii-graphics character
   def sprite_is_taken(self, sprite):
@@ -152,7 +153,7 @@ class Gamestate:
       return
 
     elif self.thingat(destinationcoord):
-      print('Sorry, unit cant move to occupied coord')
+      print('Sorry, unit cant move to occupied coord.')
       return
 
     if self.zone_of_control_blocks(destinationcoord, thing):
@@ -394,6 +395,7 @@ class Game:
       return None
 
   # todo low priority: make this cascade into something neater
+  # eg, methodize a lot
   def parseinput(self, rawstring):
     if rawstring == '':
       return
@@ -414,7 +416,7 @@ class Game:
         if targetcoord:
           thing = self.gamestate.thingat(targetcoord)
           if thing:
-            thing.verbose_info()
+            print(thing.verbose_info())
             return
         print('Error, i dont know what you want to look at in given coord')
 
@@ -476,11 +478,12 @@ class Game:
       self.gamestate.add_thing(newunit)
       self.gamestate.debug_move(newunit, spawncoord)
       self.gamestate.printgrid()
+      return
 
     elif cmd.startswith('quit') or cmd.startswith('exit'):
       return True
-    # context-sensitive command for a unit: TODO: clean up logic
 
+    # context-sensitive command for a unit: TODO: clean up logic
     elif (self.gamestate.unit_from_sprite(rawstring.split()[0])):
       # how to do this without code duplication?
       rawwords = rawstring.split()
@@ -493,9 +496,11 @@ class Game:
         elif len(words) >= 2:
           # first see if last word describes a unit
           target = self.gamestate.unit_from_sprite(rawwords[-1])
+          # TODO flip this branch: put more relevant block first
           if target is None:
             # alternately see if last word is in coord format
             # NOTE: assume relative not absolute coord
+            # TODO: methodize, similar to 'go NW' syntax below
             rel_coord = Game.parsecoord(words[-1])
             if rel_coord:
               abs_coord = util.coord_sum(unit.coord, rel_coord)
