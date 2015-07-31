@@ -412,6 +412,7 @@ class Game:
       if len(words) == 1:
         # draw
         self.gamestate.printgrid()
+        return
       else:
         # draw 3,2
         if (not words[1][0].isdigit()) or len(words) > 2:
@@ -424,6 +425,7 @@ class Game:
             print(thing.verbose_info())
             return
         print('Error, i dont know what you want to look at in given coord')
+        return
 
     # units command, format 'squads', 'units', etc
     # prints detailed summary of all units, models etc
@@ -432,7 +434,8 @@ class Game:
         print 'Error, i can\'t understand this units command'
         return
       for thing in self.gamestate.things:
-        print thing.verbose_info()
+        print(thing.verbose_info())
+      return
 
     # move command, format 'move 2,3 to 4,1' or 'move 2,3 4,1' for now
     elif words[0]=='move':
@@ -447,6 +450,7 @@ class Game:
       destinationcoord = Game.parsecoord(words[-1])
       self.gamestate.move(mover, destinationcoord)
       self.gamestate.printgrid()
+      return
 
     # shoot command, format 'shoot 2,3 at 4,1' or without the 'at'.
     elif words[0] in ('shoot', 'attack', 'fire'):
@@ -466,6 +470,7 @@ class Game:
           r=targetcoord[0], c=targetcoord[1])
         return
       self.gamestate.shoot(shooter, target)
+      return
 
     # new Unit command, format 'new strider 3,2' for now
     elif words[0]=='new':
@@ -523,12 +528,15 @@ class Game:
             # TODO check if both friendlies,
             # then if so move first towards the second.
             self.gamestate.shoot(unit, target)
+            return
       else:
         print('error: at first i thought you were giving a unit-specific '
             + 'command, but i cant find a unit with that initial')
+        return
 
     elif cmd == 'legend' or cmd == 'directions' or cmd == 'rose':
       print(legend)
+      return
 
     elif cmd in ('rebels', 'go', 'enemies', 'enemy turn'):
       for unit in self.gamestate.things:
@@ -536,6 +544,7 @@ class Game:
           print('\n {unit} is acting:'.format(
             unit=unit.name_with_sprite()))
           self.gamestate.act(unit)
+      return
     # TODO also ability to make protectorate auto-take its turn
 
     # elif cmd in ('newgame', 'new game', 'start over', 'reset'):      
