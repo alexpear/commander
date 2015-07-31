@@ -79,3 +79,23 @@ def conjugateplural(quantity, singularword):
     return "1 " + singularword
   else:
     return str(quantity) + " " + singularword + "s"
+
+# returns coord of form [0, -1] or [-1, 1], etc suggesting
+# the rough direction from coords a to b.
+# Only returns integer coordinates, so 9 possible return values (inc 0,0).
+# used for Gamestate.act(). Kindof hacky.
+def direction_from(a, b):
+  diff_coord = [b[0] - a[0], b[1] - a[1]]
+  # This function is sometimes called sign()
+  def one_zero_minusone(x):
+    if x > 0:
+      return 1
+    elif x == 0:
+      return 0
+    else:
+      return -1
+  return [one_zero_minusone(diff_coord[0]),
+          one_zero_minusone(diff_coord[1])]
+
+def next_letter(letter):
+  return chr(ord(letter) + 1)
