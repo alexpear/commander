@@ -23,11 +23,12 @@ legend = '''-1,-1  -1,0  -1,1
 
 cardinal_directions = {
   'northwest': [-1,-1], 'north': [-1,0], 'northeast': [-1,1],
-  'west' :  [0,-1], 'centre':  [0,0], 'east' :  [0,1],
-  'southwest':  [1,-1], 'south':  [1,0], 'southeast':  [1,1]
-  # 'nw': [-1,-1], 'n': [-1,0], 'ne': [-1,1],
-  # 'w' :  [0,-1], 'x':  [0,0], 'e' :  [0,1],
-  # 'sw':  [1,-1], 's':  [1,0], 'se':  [1,1],
+  'west' :      [0,-1], 'centre': [0,0], 'east' :      [0,1],
+  'southwest':  [1,-1], 'south':  [1,0], 'southeast':  [1,1],
+  # You can also refer to them with 2-letter abbreviations:
+  'nw': [-1,-1], 'nn': [-1,0], 'ne': [-1,1],
+  'ww' : [0,-1], 'cc':  [0,0], 'ee' : [0,1],
+  'sw':  [1,-1], 'ss':  [1,0], 'se':  [1,1],
 }
 
 WIDTH = 12
