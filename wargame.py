@@ -3,10 +3,8 @@
 # ? 
 
 import unit_modu
+import util
 import math
-import random
-# from math import sqrt
-# from random import randint
 
 '''
 turn based strategy wargame
@@ -17,90 +15,20 @@ simple stats
 first shooting-only, then melee
 '''
 
-# global methods, maybe clumsy:
-
 legend = '''-1,-1  -1,0  -1,1
 
  0,-1         0,1
 
  1,-1   1,0   1,1'''
 
-def tiles(inches):
-  return inches / 6.0
-def inches(tiles):
-  return tiles * 6
-
-def constrain(n, minimum, maximum):
-  if minimum > maximum:
-    temp = maximum
-    maximum = minimum
-    minimum = temp
-  if n < minimum:
-    return minimum
-  elif n > maximum:
-    return maximum
-  else:
-    return n
-
-# needs work
-# takes 2 coords now
-def distance(a, b):
-  rowdiff = abs(a[0] - b[0])
-  coldiff = abs(a[1] - b[1])
-  return int(round(math.sqrt(rowdiff**2 + coldiff**2)))
-
-def coord_sum(a, b):
-  return [a[0] + b[0], a[1] + b[1]]
-
-# TODO: more rolls, for Ld, to-hit, diff terrain, etc?
-def roll(logtext='Rolling', diecount=1, goal=None, wanthigh=True):
-  if diecount <= 0:
-    print 'roll 0 dice? nonsense!'
-    return
-
-  total = 0
-  results = []
-  for die in range(diecount):
-    result = random.randint(1,6)
-    results.append(result)
-    total += result
-  # TODO: branch if more than one diecount so can say total then
-  logtext += ' ... got: {n}'.format(n=results[0])
-  # mention the further dice if there are more than 1:
-  for i in range(len(results)-1):
-    logtext += ', {n}'.format(n=results[i])
-
-  if goal:
-    logtext += '...want {g}'.format(g=goal)
-    if wanthigh:
-      success = total >= goal
-    else:
-      success = total <= goal
-    if success:
-      logtext += '...Success!'
-    else:
-      logtext += '...Failure.'
-  print logtext
-  return result
-
-# TODO: refactor so doesn't require use of lambdas. Return int,bool pair? 
-def roll(logtext = 'Rolling', diecount=1, successif=None):
-  # diecount not yet implemented
-  result = random.randint(1,6)
-  logtext += ' ... got a {n}.'.format(n=result)
-  if successif != None:
-    if successif(result):
-      logtext += ' Success!'
-    else:
-      logtext += ' Failed.'
-  print logtext
-  return result
-
-def conjugateplural(quantity, singularword):
-  if quantity == 1:
-    return "1 " + singularword
-  else:
-    return str(quantity) + " " + singularword + "s"
+cardinal_directions = {
+  'northwest': [-1,-1], 'north': [-1,0], 'northeast': [-1,1],
+  'west' :  [0,-1], 'centre':  [0,0], 'east' :  [0,1],
+  'southwest':  [1,-1], 'south':  [1,0], 'southeast':  [1,1]
+  # 'nw': [-1,-1], 'n': [-1,0], 'ne': [-1,1],
+  # 'w' :  [0,-1], 'x':  [0,0], 'e' :  [0,1],
+  # 'sw':  [1,-1], 's':  [1,0], 'se':  [1,1],
+}
 
 WIDTH = 12
 HEIGHT = 8
@@ -190,7 +118,7 @@ class Gamestate:
     for other_thing in self.things:
       if (other_thing.ws > 0 and
           other_thing.allegiance != mover.allegiance and
-          distance(coord, other_thing.coord) <= 1 and
+          util.distance(coord, other_thing.coord) <= 1 and
           other_thing.quantity > 0):
         return True
     return False
@@ -213,14 +141,14 @@ class Gamestate:
 
   # Use this to move units
   def move(self, thing, destinationcoord):
-    # assuming the Thing is a Unit (or Model maybe?)
-    dist = distance(thing.coord, destinationcoord)
+    # assuming the Thing is a Unit
+    dist = util.distance(thing.coord, destinationcoord)
     if thing.move < dist:
       print(
         'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
         'is {max}sq / {maxin}")').format(
-          real=dist, realin=inches(dist),
-          max=thing.move, maxin=inches(thing.move))
+          real=dist, realin=util.inches(dist),
+          max=thing.move, maxin=util.inches(thing.move))
       return
 
     elif self.thingat(destinationcoord):
@@ -244,31 +172,31 @@ class Gamestate:
     # more asserts? TODO
 
     print shooter.name_with_sprite() + ' is shooting at ' + target.name_with_sprite()
-    dist = distance(shooter.coord, target.coord)
+    dist = util.distance(shooter.coord, target.coord)
     if shooter.rng < dist:
       print(
         'Sorry, target is out of range ({real}sq / {realin}", ' +
         'range: {max}sq / {maxin}")').format(
-          real=dist, realin=inches(dist),
-          max=shooter.rng, maxin=inches(shooter.rng))
+          real=dist, realin=util.inches(dist),
+          max=shooter.rng, maxin=util.inches(shooter.rng))
       return
 
-    print ' ' + conjugateplural(shooter.quantity, "shooter") + "..."
+    print ' ' + util.conjugateplural(shooter.quantity, "shooter") + "..."
 
     totalshotcount = shooter.shotspercreature * shooter.quantity
     attacks = []
     for i in range(totalshotcount):
       attacks.append(Attack(shooter.shootstr, shooter.ap))
 
-    print ' ' + conjugateplural(len(attacks), "shot") + "..."
+    print ' ' + util.conjugateplural(len(attacks), "shot") + "..."
 
     # To Hit
     for attack in attacks:
       if not attack.active:
         continue
       need_to_roll = 7 - shooter.bs
-      need_to_roll = constrain(need_to_roll, 2, 6)
-      result = roll(
+      need_to_roll = util.constrain(need_to_roll, 2, 6)
+      result = util.roll(
         'Shooting to-hit roll, shooter needs a {goal}+'.format(goal = need_to_roll),
         successif = (lambda n: n>=need_to_roll))
       if result < need_to_roll:
@@ -277,20 +205,20 @@ class Gamestate:
     # Attacks that do not hit, wound, etc are marked .active = False
     # And then removed. Might be clumsy.
     hits = [a for a in attacks if a.active]
-    print ' ' + conjugateplural(len(hits), "hit") + "..."
+    print ' ' + util.conjugateplural(len(hits), "hit") + "..."
 
     # To Wound
     for attack in hits:
       need_to_roll = target.t - shooter.shootstr + 4
-      need_to_roll = constrain(need_to_roll, 2, 6)
-      result = roll(
+      need_to_roll = util.constrain(need_to_roll, 2, 6)
+      result = util.roll(
         'Shooting to-wound roll, shooter needs a {goal}+'.format(goal = need_to_roll), 
         successif = (lambda n: n>=need_to_roll))
       if result < need_to_roll:
         attack.active = False
 
     wounds = [a for a in hits if a.active]
-    print ' ' + conjugateplural(len(wounds), "pre-saving wound") + "..."
+    print ' ' + util.conjugateplural(len(wounds), "pre-saving wound") + "..."
 
     # Saves
     for attack in wounds:
@@ -298,7 +226,7 @@ class Gamestate:
       if target.sv >= 7 or target.sv >= attack.ap:
         break
       need_to_roll = target.sv
-      result = roll(
+      result = util.roll(
         'Shooting armor save, target saves on a {goal}+'.format(goal = need_to_roll))
       if result >= need_to_roll:
         attack.active = False
@@ -404,7 +332,7 @@ class Gamestate:
     for r in range(self.width()):
       print str(r) + ' |',
       for c in range(self.height()):
-        print distance([0,0], [r,c]) % 10,
+        print util.distance([0,0], [r,c]) % 10,
       print '| ' + str(r)
     print '    - - - - - - - - - - - -'
     print '    0 1 2 3 4 5 6 7 8 9 X E'
@@ -421,7 +349,7 @@ class Gamestate:
           other_unit.allegiance == acting_unit.allegiance or
           other_unit.quantity <= 0):
         continue  # invalid unit, not a foe
-      dist = distance(other_unit.coord, acting_unit.coord)
+      dist = util.distance(other_unit.coord, acting_unit.coord)
       if dist < shortest_so_far:
         shortest_so_far = dist
         chosen_target = other_unit
@@ -434,7 +362,7 @@ class Gamestate:
     cur = acting_unit.coord
     self.move(
       acting_unit,
-      coord_sum(
+      util.coord_sum(
         cur,
         direction_from(cur, chosen_target.coord)))
     self.printgrid()
@@ -570,7 +498,7 @@ class Game:
             # NOTE: assume relative not absolute coord
             rel_coord = Game.parsecoord(words[-1])
             if rel_coord:
-              abs_coord = coord_sum(unit.coord, rel_coord)
+              abs_coord = util.coord_sum(unit.coord, rel_coord)
               target = self.gamestate.thingat(abs_coord)
               if target is None:
                 # they want to move
