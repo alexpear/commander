@@ -15,6 +15,7 @@ simple stats
 first shooting-only, then melee
 '''
 
+# Could move these to data.py
 legend = '''-1,-1  -1,0  -1,1
 
  0,-1         0,1
