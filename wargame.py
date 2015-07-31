@@ -156,8 +156,13 @@ class Gamestate:
       print('Sorry, unit cant move to occupied coord.')
       return
 
-    if self.zone_of_control_blocks(destinationcoord, thing):
-      print('Sorry, unit cant move within 1 sq of an enemy unit')
+    elif self.zone_of_control_blocks(destinationcoord, thing):
+      print('Sorry, unit cant move within 1 sq of an enemy unit.')
+      return
+
+    elif (destinationcoord[0] < 0 or destinationcoord[0] >= HEIGHT or
+        destinationcoord[1] < 0 or destinationcoord[1] >= WIDTH):
+      print('Error, unit cannot move out of bounds.')
       return
 
     # TODO: other checks, asserts
