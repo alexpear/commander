@@ -65,6 +65,8 @@ class Unit(Thing):
     self.rng = rng
     self.weapontype = weapontype
     self.shotspercreature = weaponshots # to remove
+    self.can_shoot = True
+    self.can_assault = True
     self.pt = pt
     self.move_max = move_max
     self.move_left = self.move_max
