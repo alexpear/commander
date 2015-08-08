@@ -53,6 +53,13 @@ class Attack:
 
 # TODO put Gamestate and Game in separate files
 class Gamestate:
+  def refresh_army(self, allegiance='all'):
+    for thing in self.things:
+      if not thing.is_unit:
+        continue
+      if thing.allegiance.startswith(allegiance) or allegiance=='all':
+        thing.start_turn()
+
   # a 'sprite' here is an ascii-graphics character
   def sprite_is_taken(self, sprite):
     for thing in self.things:
@@ -124,7 +131,11 @@ class Gamestate:
   def move(self, thing, destinationcoord):
     # assuming the Thing is a Unit
     dist = util.distance(thing.coord, destinationcoord)
-    if thing.move_left < dist:
+    if thing.move_left < 1:
+      print('Sorry, unit cannot move (any further) right now.')
+      return
+
+    elif thing.move_left < dist:
       print(
         'Sorry, unit cant move that far ({real}sq / {realin}", but move remaining ' +
         'is {move}sq / {movein}")').format(
@@ -147,6 +158,9 @@ class Gamestate:
 
     # TODO: other checks, asserts
     self.debug_move(thing, destinationcoord)
+
+    # Mark that this unit has moved.
+    thing.move_left -= dist
 
   def shoot(self, shooter, target):
     if target.quantity <= 0 or shooter.quantity <= 0:
@@ -531,12 +545,15 @@ class Game:
       print(legend)
       return
 
-    elif cmd in ('rebels', 'go', 'enemies', 'enemy turn'):
+    # TODO: differentiate the two players' turns
+    elif cmd in ('rebels', 'go', 'enemies', 'enemy turn', 'end turn', 'end', 'done'):
+      self.gamestate.refresh_army('rebels')
       for unit in self.gamestate.things:
         if unit.allegiance == 'rebels':
           print('\n {unit} is acting:'.format(
             unit=unit.name_with_sprite()))
           self.gamestate.act(unit)
+      self.gamestate.refresh_army('protectorate')
       return
     # TODO also ability to make protectorate auto-take its turn
 

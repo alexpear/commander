@@ -105,6 +105,14 @@ class Unit(Thing):
     # return '\x1b[' + data.colordict[colorkey] + self.name[:charcount].capitalize() + '\x1b[0m'
     return '\x1b[' + data.colordict[colorkey] + self.sprite + '\x1b[0m'
 
+  def start_turn(self):
+    self.move_left = self.move_max
+    self.can_shoot = True
+    # TODO: Change this logic for units that can never assault, etc
+    self.can_assault = True
+    self.casualties_this_phase = 0
+    # TODO this field will need to be reset on end/start of phases later.
+
 # TODO later just move this __dict__.update(stats from data.py) code to Unit()
 def unit_from_stats_entry(stats_dict):
   new_unit = Unit()
