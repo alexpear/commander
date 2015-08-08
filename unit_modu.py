@@ -69,11 +69,13 @@ class Unit(Thing):
     self.shotspercreature = weaponshots # to remove
     self.can_shoot = True
     self.can_assault = True
+    self.casualties_this_phase = 0
     self.pt = pt
     self.move_max = move_max
     self.move_left = self.move_max
     self.size = 20
     self.quantity = quantity
+    self.starting_quantity = quantity
     # TODO track allegiance as pointer to Army object, etc?
     self.allegiance = allegiance
     self.coord = [888,888]
