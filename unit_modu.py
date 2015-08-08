@@ -24,6 +24,7 @@ class Thing(object):
     self.allegiance = 'gaia'
     self.quantity = 0
     self.ws = 0
+    self.is_unit = False
 
   def get_sprite(self):
     return self.sprite
@@ -48,6 +49,7 @@ class Unit(Thing):
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
       shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
       quantity=10, move_max=1, pt=10, color=32, allegiance='rebels'):
+    self.is_unit = True  # TODO or thing.__class__.__name__ == 'Unit', alternately.
     self.name = name
     self.sprite = '?' # until Gamestate's add_thing() is called
     self.ws = ws
