@@ -47,10 +47,9 @@ class Unit(Thing):
   # deprecated. Instead read from data.py dicts
   def __init__(self, name='?', ws=3, bs=3, s=3, t=3, w=1, i=3, a=1, ld=7, sv=7, 
       shootstr=3, ap=7, rng=2, weapontype='rapidfire', weaponshots=1,
-      quantity=10, move=1, pt=10, color=32, allegiance='rebels'):
+      quantity=10, move_max=1, pt=10, color=32, allegiance='rebels'):
     self.name = name
     self.sprite = '?' # until Gamestate's add_thing() is called
-    self.move = move
     self.ws = ws
     self.bs = bs
     self.s = s
@@ -67,7 +66,8 @@ class Unit(Thing):
     self.weapontype = weapontype
     self.shotspercreature = weaponshots # to remove
     self.pt = pt
-    self.move_left = self.move
+    self.move_max = move_max
+    self.move_left = self.move_max
     self.size = 20
     self.quantity = quantity
     # TODO track allegiance as pointer to Army object, etc?

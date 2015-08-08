@@ -124,12 +124,12 @@ class Gamestate:
   def move(self, thing, destinationcoord):
     # assuming the Thing is a Unit
     dist = util.distance(thing.coord, destinationcoord)
-    if thing.move < dist:
+    if thing.move_left < dist:
       print(
-        'Sorry, unit cant move that far ({real}sq / {realin}", but move ' +
-        'is {max}sq / {maxin}")').format(
+        'Sorry, unit cant move that far ({real}sq / {realin}", but move remaining ' +
+        'is {move}sq / {movein}")').format(
           real=dist, realin=util.inches(dist),
-          max=thing.move, maxin=util.inches(thing.move))
+          move=thing.move_left, movein=util.inches(thing.move_left))
       return
 
     elif self.thingat(destinationcoord):
