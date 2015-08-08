@@ -72,7 +72,7 @@ class Unit(Thing):
     self.casualties_this_phase = 0
     self.pt = pt
     self.move_max = move_max
-    self.move_left = self.move_max
+    self.move_left = move_max
     self.size = 20
     self.quantity = quantity
     self.starting_quantity = quantity
