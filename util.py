@@ -8,6 +8,9 @@ def tiles(inches):
 def inches(tiles):
   return tiles * 6
 
+def dist_to_string(tiles):
+  return '{sq}sq / {in}"'.format(sq=tiles, in=inches(tiles))
+
 def constrain(n, minimum, maximum):
   if minimum > maximum:
     temp = maximum
