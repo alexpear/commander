@@ -402,6 +402,8 @@ class Game:
     cmd = rawstring.lower().strip()
     words = rawstring.lower().split()
 
+    # TODO functionize these commands
+    # Make Player objects?
     if words[0] in ('draw', 'look', 'grid', 'board', 'map', 'ls'):
       if len(words) == 1:
         # draw
@@ -555,7 +557,7 @@ class Game:
           self.gamestate.act(unit)
       self.gamestate.refresh_army('protectorate')
       return
-    # TODO also ability to make protectorate auto-take its turn
+    # TODO also ability to make the _protectorate_ auto-take its turn
 
     # elif cmd in ('newgame', 'new game', 'start over', 'reset'):      
     else:
