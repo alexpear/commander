@@ -32,6 +32,7 @@ class Thing(object):
   def name_with_sprite(self):
     return self.name + ' (' + self.get_sprite() + ')'
 
+  # TODO bug, sprites can show up as lowercase here when they shouldnt
   def verbose_info(self):
     string = (
       "{coord} {name}\n").format(

@@ -88,10 +88,10 @@ class Gamestate:
   # Has less restrictions than move()
   def debug_move(self, thing, destinationcoord):
     if thing==None:
-      print 'error, move() is asked to move a pointer to None'
+      print 'error, move() is asked to move a pointer that evaluates to None'
       return
 
-    # TODO: might need exception later for transport vehicles? 
+    # TODO: might need exception later for transport vehicles
     # If something is occupying the destination:
     if self.thingat(destinationcoord):
       print 'error, destination {r},{c} is already occupied'.format(
@@ -217,6 +217,7 @@ class Gamestate:
     print ' {n} casualties...'.format(n=len(unsaved_wounds))
   
     if len(unsaved_wounds) > 0:
+      # TODO bug, 1 unsaved wound led to multiple lost models. seen once 2015 aug 9.
       self.damage(target, len(unsaved_wounds))
       print ' Now target has ' + str(target.quantity) + ' creatures left in it.'
 
