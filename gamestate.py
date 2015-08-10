@@ -145,7 +145,7 @@ class Gamestate:
     dist = util.distance(shooter.coord, target.coord)
     if shooter.rng < dist:
       print(
-        'Sorry, target is out of range ({real}sq / {realin}", ' +
+        'Tried to shoot but target is out of range ({real}sq / {realin}", ' +
         'range: {max}sq / {maxin}")').format(
           real=dist, realin=util.inches(dist),
           max=shooter.rng, maxin=util.inches(shooter.rng))

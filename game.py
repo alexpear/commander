@@ -236,7 +236,7 @@ class Game:
       rawinput = raw_input('> ')
       print ''
       done = self.parseinput(rawinput)
-    print 'Farewell.'
+    print 'Farewell.\n'
     return
 
 g = Game()
