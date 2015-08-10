@@ -93,7 +93,9 @@ class Game:
         print 'Error, i can\'t understand this units command'
         return
       for thing in self.gamestate.things:
-        print(thing.verbose_info())
+        # Don't print info about terrain pieces, etc
+        if thing.is_unit:
+          print(thing.verbose_info())
       return
 
     # move command, format 'move 2,3 to 4,1' or 'move 2,3 4,1' for now
