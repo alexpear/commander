@@ -132,6 +132,7 @@ class Gamestate:
 
     # TODO: other checks, asserts
     self.debug_move(thing, destinationcoord)
+    self.printgrid()
 
     # Mark that this unit has moved.
     thing.move_left -= dist
@@ -334,7 +335,6 @@ class Gamestate:
       util.coord_sum(
         cur,
         util.direction_from(cur, chosen_target.coord)))
-    self.printgrid()
 
     # Now shoots target:
     self.shoot(acting_unit, chosen_target)

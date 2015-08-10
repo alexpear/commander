@@ -110,7 +110,6 @@ class Game:
         return
       destinationcoord = Game.parsecoord(words[-1])
       self.gamestate.move(mover, destinationcoord)
-      self.gamestate.printgrid()
       return
 
     # shoot command, format 'shoot 2,3 at 4,1' or without the 'at'.
