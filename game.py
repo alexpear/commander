@@ -37,6 +37,7 @@ cardinal_directions = {
 class Game:
   def __init__(self):
     self.gamestate = gamestate.Gamestate()
+    self.turn_faction = 'protectorate'
 
   # if coord is correctly formatted (eg '4,8' with no spaces) return as [4,8]
   # else return None
@@ -212,13 +213,17 @@ class Game:
       return
 
     # TODO: differentiate the two players' turns
-    elif cmd in ('rebels', 'go', 'enemies', 'enemy turn', 'end turn', 'end', 'done'):
+    elif cmd in ('rebels', 'go', 'enemies', 'enemy turn', 'end turn', 'endturn', 'end', 'done'):
+      # todo methodize as start_turn() run_turn() etc
+      self.turn_faction = 'rebels'
       self.gamestate.refresh_army('rebels')
       for unit in self.gamestate.things:
         if unit.allegiance == 'rebels':
           print('\n {unit} is acting:'.format(
             unit=unit.name_with_sprite()))
           self.gamestate.act(unit)
+
+      self.turn_faction = 'protectorate'
       self.gamestate.refresh_army('protectorate')
       return
     # TODO also ability to make the _protectorate_ auto-take its turn
