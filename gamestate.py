@@ -138,7 +138,10 @@ class Gamestate:
     thing.move_left -= dist
 
   def shoot(self, shooter, target):
-    if target.quantity <= 0 or shooter.quantity <= 0:
+    if not shooter.can_shoot:
+      print('unit is not permitted to shoot right now')
+      return
+    elif target.quantity <= 0 or shooter.quantity <= 0:
       print 'error, one unit is empty / wiped out'
       return
     elif target.allegiance == shooter.allegiance:
@@ -146,7 +149,6 @@ class Gamestate:
       return
     # more asserts? TODO
 
-    print shooter.name_with_sprite() + ' is shooting at ' + target.name_with_sprite()
     dist = util.distance(shooter.coord, target.coord)
     if shooter.rng < dist:
       print(
@@ -155,6 +157,10 @@ class Gamestate:
           real=dist, realin=util.inches(dist),
           max=shooter.rng, maxin=util.inches(shooter.rng))
       return
+
+    print shooter.name_with_sprite() + ' is shooting at ' + target.name_with_sprite()
+
+    shooter.can_shoot = False
 
     print ' ' + util.conjugateplural(shooter.quantity, "shooter") + "..."
 
