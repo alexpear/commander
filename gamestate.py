@@ -241,11 +241,12 @@ class Gamestate:
 
   def spawndebugunits(self):
     # todo could invest in specifying scenario by grid of chars.
-    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'protectorate')
-    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'protectorate')
+    # todo do allegiance by enum or objs, not just strings
+    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'rebels')
+    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'rebels')
 
-    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'rebels')
-    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'rebels')
+    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'protectorate')
+    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'protectorate')
 
   def spawn_random_terrain(self):
     for r in range(HEIGHT):
