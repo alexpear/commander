@@ -1,10 +1,14 @@
 import math
+import random
+from random import randrange
 
 import unit_modu
 import util
 
 WIDTH = 12
 HEIGHT = 8
+
+TERRAIN_FREQUENCY = 0.25
 
 # doesn't really do anything in this build but whatever
 # maybe useful for terrain/cover later
@@ -211,6 +215,10 @@ class Gamestate:
 
   # TODO could unify this and spawn_thing
   def spawn_unit(self, faction, coord, allegiance='rebels'):
+    if self.thingat(coord):
+      print('Cant spawn unit on occupied square')
+      return
+
     unit = unit_modu.random_from_faction(faction, allegiance)
     self.add_thing(unit)
     self.debug_move(unit, coord)
@@ -226,36 +234,27 @@ class Gamestate:
 
   def spawndebugunits(self):
     # todo could invest in specifying scenario by grid of chars.
-    self.spawn_thing('chasm', [1,1])
+    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'protectorate')
+    self.spawn_unit("unsc", [randrange(0,2), randrange(0,WIDTH)], 'protectorate')
 
-    self.spawn_unit("unsc", [0,3], 'protectorate')
+    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'rebels')
+    self.spawn_unit("unsc", [randrange(HEIGHT-2,HEIGHT), randrange(0,WIDTH)], 'rebels')
 
-    self.spawn_thing('chasm', [0,6])
-    self.spawn_thing('chasm', [1,6])
-
-    self.spawn_unit("unsc", [0,8], 'protectorate')
-
-    self.spawn_thing('chasm', [2,3])
-    self.spawn_thing('chasm', [3,3])
-    self.spawn_thing('chasm', [2,4])
-
-    self.spawn_thing('chasm', [4,6])
-    self.spawn_thing('chasm', [4,7])
-    self.spawn_thing('chasm', [4,8])
-    self.spawn_thing('chasm', [4,9])
-
-    self.spawn_unit("unsc", [7,2], 'rebels')
-
-    self.spawn_thing('chasm', [7,5])
-    self.spawn_thing('chasm', [7,6])
-
-    self.spawn_unit("unsc", [7,9], 'rebels')
+  def spawn_random_terrain(self):
+    for r in range(HEIGHT):
+      for c in range(WIDTH):
+        coord = [r,c]
+        if not self.thingat(coord):
+          if random.random() < (TERRAIN_FREQUENCY):
+            # Just chasms for now
+            self.spawn_thing('chasm', coord)
 
   # tag Gamestate init gamestate __init__()
   def __init__(self):
     self.grid = [[Square() for c in range(WIDTH)] for r in range(HEIGHT)]
     self.things = []  # all things
     self.spawndebugunits()
+    self.spawn_random_terrain()
 
   def width(self):
     return len(self.grid)
