@@ -73,8 +73,8 @@ class Gamestate:
       if unit.quantity <= 0:
         self.things.remove(unit)
         # TODO call this with more fanfare and ceremony?
-    # TODO once turns are implemented, track casualties per turn
-    # because of 25% thing, etc
+    # TODO track casualties per turn/phase
+    # because of 25% morale thing, etc
 
   def zone_of_control_blocks(self, coord, mover):
     for other_thing in self.things:
