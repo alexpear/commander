@@ -179,7 +179,6 @@ class Game:
               if target is None:
                 # they want to move
                 self.gamestate.move(unit, abs_coord)
-                self.gamestate.printgrid()
                 return
               else:
                 # TODO flip this branch
@@ -192,7 +191,6 @@ class Game:
               absolute_destination = util.coord_sum(unit.coord, direction_coord)
               # TODO could check if they want to shoot, same as above
               self.gamestate.move(unit, absolute_destination)
-              self.gamestate.printgrid()
               return
             else:
               print('error, couldnt parse context sensitive unit command')
