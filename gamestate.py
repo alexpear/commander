@@ -66,10 +66,10 @@ class Gamestate:
   def damage(self, unit, wounds):
     unit.wounds_taken += wounds
     if unit.wounds_taken >= unit.w:
-      # The floors could be overkill idk.
-      casualties = math.floor(unit.wounds_taken) / math.floor(unit.w)
-      # Maintain int type.
-      unit.quantity -= int(casualties)
+      # The '/' operator rounds down with ints.
+      casualties = unit.wounds_taken / unit.w
+      unit.wounds_taken -= casualties * unit.w
+      unit.quantity -= casualties
       if unit.quantity <= 0:
         self.things.remove(unit)
         # TODO call this with more fanfare and ceremony?
