@@ -81,7 +81,7 @@ class Unit(Thing):
     string = (
       'WS BS  S  T  W  I  A Ld Sv Pts Qty Total Army Float Coord Name\n' +
       '{ws:>2} {bs:>2} {s:>2} {t:>2} {w:>2} {i:>2} {a:>2} {ld:>2} {sv:<2}' +
-      ' {pts:^3}  {qty:^2}  {total:^3}  {allegiance}    {fw}   {coord:^5} {name}\n').format(
+      ' {pts:^3}  {qty:^2}  {total:^3}  {allegiance}    {fw}    {coord:^4} {name}\n').format(
         coord=util.coordtostring(self.coord), name=self.name_with_sprite(),
         qty=self.quantity, allegiance=abbreviatedAllegiance, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
