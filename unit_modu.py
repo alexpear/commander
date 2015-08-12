@@ -90,11 +90,11 @@ class Unit(Thing):
     string = (
       "{coord} {name} x{quant} {allegiance}\n" +
       "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
-      "{sv_type} save: {sv}, {pt} points each\n").format(
+      "{sv_type} sv: {sv}, {pt} points each, {fw} floating wound\n").format(
         coord=coordtostring(self.coord), name=self.name_with_sprite().capitalize(),
         quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
-        sv=save_to_string(self.sv), sv_type='armor', pt=self.pt)
+        sv=save_to_string(self.sv), sv_type='armor', pt=self.pt, fw=self.wounds_taken)
     return string
 
   # TODO ability to refer to them by shortcuts while being 2-3 letters long
