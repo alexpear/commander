@@ -11,6 +11,15 @@ def inches(tiles):
 def dist_to_string(tiles):
   return '{sq}sq / {inch}"'.format(sq=tiles, inch=inches(tiles))
 
+def coordtostring(coord):
+  return "{0},{1}".format(coord[0],coord[1])
+
+def save_to_string(save_value):
+  if save_value == 7:
+    return '-'
+  else:
+    return '{val}+'.format(val=save_value)
+
 def constrain(n, minimum, maximum):
   if minimum > maximum:
     temp = maximum

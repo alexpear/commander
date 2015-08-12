@@ -3,18 +3,9 @@
 # ? 
 
 import data
+import util
+
 import random
-
-# TODO probably should be in some global string utilities file
-# or unit's verbose_info() should be in Game
-def coordtostring(coord):
-  return "{0},{1}".format(coord[0],coord[1])
-
-def save_to_string(save_value):
-  if save_value == 7:
-    return '-'
-  else:
-    return '{val}+'.format(val=save_value)
 
 class Thing(object):
   def __init__(self, name='traitless thing', coord=[999,999], sprite='?'):
@@ -30,13 +21,13 @@ class Thing(object):
     return self.sprite
 
   def name_with_sprite(self):
-    return self.name + ' (' + self.get_sprite() + ')'
+    return self.name.capitalize() + ' (' + self.get_sprite() + ')'
 
   # TODO bug, sprites can show up as lowercase here when they shouldnt
   def verbose_info(self):
     string = (
       "{coord} {name}\n").format(
-        coord=coordtostring(self.coord), name=self.name_with_sprite().capitalize())
+        coord=util.coordtostring(self.coord), name=self.name_with_sprite())
     return string
 
 # for now, forget about being made up of Models / Creatures and Components
@@ -58,7 +49,7 @@ class Unit(Thing):
     self.s = s
     self.t = t
     self.w = w
-    self.wounds_taken = 0
+    self.wounds_taken = 0  # todo rename to floating_wounds?
     self.i = i
     self.a = a
     self.ld = ld
@@ -84,17 +75,18 @@ class Unit(Thing):
     # later store wargear (or wargear stats), state, other stats from notes
 
   def verbose_info(self):
-    alleg = self.allegiance[0:3].upper()
+    abbreviatedAllegiance = self.allegiance[0:3].upper()
 
-    # TODO print WS BS etc in line over their values
+    # btw {foo:>2} means enforce 2-char width and right justify
     string = (
-      "{coord} {name} x{quant} {allegiance}\n" +
-      "    WS{ws} BS{bs} S{s} T{t} W{w} I{i} A{a} Ld{ld}, " +
-      "{sv_type} sv: {sv}, {pt} points each, {fw} floating wound\n").format(
-        coord=coordtostring(self.coord), name=self.name_with_sprite().capitalize(),
-        quant=self.quantity, allegiance=alleg, ws=self.ws, bs=self.bs,
+      'WS BS  S  T  W  I  A Ld Sv Pts Qty Total Army Float Coord Name\n' +
+      '{ws:>2} {bs:>2} {s:>2} {t:>2} {w:>2} {i:>2} {a:>2} {ld:>2} {sv:<2}' +
+      ' {pts:^3}  {qty:^2}  {total:^3}  {allegiance}    {fw}   {coord:^5} {name}\n').format(
+        coord=util.coordtostring(self.coord), name=self.name_with_sprite(),
+        qty=self.quantity, allegiance=abbreviatedAllegiance, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
-        sv=save_to_string(self.sv), sv_type='armor', pt=self.pt, fw=self.wounds_taken)
+        sv=util.save_to_string(self.sv), pts=self.pt,
+        total=self.pt * self.quantity, fw=self.wounds_taken)
     return string
 
   # TODO ability to refer to them by shortcuts while being 2-3 letters long
