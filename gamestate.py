@@ -94,6 +94,7 @@ class Gamestate:
     if thing==None:
       print 'error, move() is asked to move a pointer that evaluates to None'
       return
+      # TODO: maybe use exceptions etc instead of print + return
 
     # TODO: might need exception later for transport vehicles
     # If something is occupying the destination:
@@ -107,7 +108,7 @@ class Gamestate:
 
   # Use this to move units
   def move(self, thing, destinationcoord):
-    # assuming the Thing is a Unit
+    # TODO assert that 'thing' is a Unit
     dist = util.distance(thing.coord, destinationcoord)
     if thing.move_left < 1:
       print('Sorry, unit cannot move (any further) right now.')

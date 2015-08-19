@@ -3,6 +3,9 @@
 import math
 import random
 
+# TODO standardize underscore_style to camelCaseStyle across this repo
+# TODO put TODOs from notes.txt into a committed file
+
 def tiles(inches):
   return inches / 6.0
 def inches(tiles):
@@ -43,6 +46,7 @@ def coord_sum(a, b):
   return [a[0] + b[0], a[1] + b[1]]
 
 # TODO: more rolls, for Ld, to-hit, diff terrain, etc?
+# TODO type up example ways of calling this funct.
 def roll(logtext='Rolling', diecount=1, goal=None, wanthigh=True):
   if diecount <= 0:
     print 'roll 0 dice? nonsense!'
