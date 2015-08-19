@@ -147,7 +147,7 @@ class Gamestate:
     elif target.allegiance == shooter.allegiance:
       print('(was gonna shoot but didnt because both units are from same army)')
       return
-    # more asserts? TODO
+    # more assert eg closest-target Ld check TODO
 
     dist = util.distance(shooter.coord, target.coord)
     if shooter.rng < dist:
