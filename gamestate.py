@@ -85,6 +85,10 @@ class Gamestate:
         return True
     return False
 
+  def is_locked(self, thing):
+    pass
+    return False
+
   # Has less restrictions than move()
   def debug_move(self, thing, destinationcoord):
     if thing==None:
@@ -115,6 +119,10 @@ class Gamestate:
         'is {move}sq / {movein}")').format(
           real=dist, realin=util.inches(dist),
           move=thing.move_left, movein=util.inches(thing.move_left))
+      return
+
+    elif self.is_locked(thing):
+      print('Sorry, unit is locked into close combat (ie adjacent to an enemy).')
       return
 
     elif self.thingat(destinationcoord):
