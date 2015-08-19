@@ -23,7 +23,6 @@ class Thing(object):
   def name_with_sprite(self):
     return self.name.capitalize() + ' (' + self.get_sprite() + ')'
 
-  # TODO bug, sprites can show up as lowercase here when they shouldnt
   def verbose_info(self):
     string = (
       "{coord} {name}\n").format(
@@ -106,7 +105,7 @@ class Unit(Thing):
     self.casualties_this_phase = 0
     # TODO this field will need to be reset on end/start of phases later.
 
-# TODO later just move this __dict__.update(stats from data.py) code to Unit()
+# TODO later just move this __dict__.update(stats from data.py) code to Unit() constructor
 def unit_from_stats_entry(stats_dict):
   new_unit = Unit()
   new_unit.__dict__.update(stats_dict)
