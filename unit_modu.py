@@ -105,6 +105,19 @@ class Unit(Thing):
     self.casualties_this_phase = 0
     # TODO this field will need to be reset on end/start of phases later.
 
+  # TODO incomplete
+  def stat_check(self, statname, modifier=0):
+    statval = self.getattr(statname)
+    if statname == 'ld':
+      # roll 2d6
+      pass
+    else:
+      # roll d6
+      pass
+
+  def ld_check(self, modifier=0):
+    return self.stat_check('ld', modifier)
+
 # TODO later just move this __dict__.update(stats from data.py) code to Unit() constructor
 def unit_from_stats_entry(stats_dict):
   new_unit = Unit()
