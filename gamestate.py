@@ -64,11 +64,11 @@ class Gamestate:
 
   # Called when a unit takes wounds
   def damage(self, unit, wounds):
-    unit.wounds_taken += wounds
-    if unit.wounds_taken >= unit.w:
+    unit.floating_wounds += wounds
+    if unit.floating_wounds >= unit.w:
       # The '/' operator rounds down with ints.
-      casualties = unit.wounds_taken / unit.w
-      unit.wounds_taken -= casualties * unit.w
+      casualties = unit.floating_wounds / unit.w
+      unit.floating_wounds -= casualties * unit.w
       unit.quantity -= casualties
       if unit.quantity <= 0:
         self.things.remove(unit)

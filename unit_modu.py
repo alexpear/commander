@@ -49,7 +49,7 @@ class Unit(Thing):
     self.s = s
     self.t = t
     self.w = w
-    self.wounds_taken = 0  # todo rename to floating_wounds?
+    self.floating_wounds = 0
     self.i = i
     self.a = a
     self.ld = ld
@@ -86,7 +86,7 @@ class Unit(Thing):
         qty=self.quantity, allegiance=abbreviatedAllegiance, ws=self.ws, bs=self.bs,
         s=self.s, t=self.t, w=self.w, i=self.i, a=self.a, ld=self.ld,
         sv=util.save_to_string(self.sv), pts=self.pt,
-        total=self.pt * self.quantity, fw=self.wounds_taken)
+        total=self.pt * self.quantity, fw=self.floating_wounds)
     return string
 
   # TODO ability to refer to them by shortcuts while being 2-3 letters long
