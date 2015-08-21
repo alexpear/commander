@@ -156,6 +156,9 @@ class Gamestate:
     elif target.allegiance == shooter.allegiance:
       print('(was gonna shoot but didnt because both units are from same army)')
       return
+    elif self.is_locked(shooter) or self.is_locked(target):
+      print('was gonna shoot but shooter or target is locked in close combat.')
+      return
     # more assert eg closest-target Ld check TODO
 
     dist = util.distance(shooter.coord, target.coord)
