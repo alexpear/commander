@@ -39,24 +39,6 @@ class Game:
     self.gamestate = gamestate.Gamestate()
     self.turn_faction = 'protectorate'
 
-  # if coord is correctly formatted (eg '4,8' with no spaces) return as [4,8]
-  # else return None
-  @classmethod
-  def parsecoord(cls, coordstring):
-    # We allow either the 0th or 1st char to be digit,
-    # because 0th char might be a '-' for a negative number
-    if (coordstring.find(',') is not -1 and
-        (coordstring[0].isdigit() or coordstring[1].isdigit()) and
-        coordstring[-1].isdigit()):
-      halves = coordstring.strip().split(',')
-      coord = [int(halves[0]), int(halves[1])]
-      # commented this check out because doesn't apply to relative coord inputs
-      # if coord[0] < 0 or coord[0] >= HEIGHT or coord[1] < 0 or coord[1] >= WIDTH:
-        # print 'BTW: parsed coordinate not on board'
-      return coord
-    else:
-      return None
-
   # todo low priority: make this cascade into something neater
   # eg, methodize a lot
   def parseinput(self, rawstring):
@@ -78,7 +60,7 @@ class Game:
         if (not words[1][0].isdigit()) or len(words) > 2:
           print 'Error, i can\'t understand this draw command'
           return
-        targetcoord = Game.parsecoord(words[1])
+        targetcoord = util.parsecoord(words[1])
         if targetcoord:
           thing = self.gamestate.thingat(targetcoord)
           if thing:
@@ -104,12 +86,12 @@ class Game:
       if len(words) < 3 or (not words[1][0].isdigit()) or (not words[-1][0].isdigit()):
         print 'error, badly formed move command'
         return
-      startcoord = Game.parsecoord(words[1])
+      startcoord = util.parsecoord(words[1])
       mover = self.gamestate.thingat(startcoord)
       if mover==None:
         print 'error, there is nothing here to move'
         return
-      destinationcoord = Game.parsecoord(words[-1])
+      destinationcoord = util.parsecoord(words[-1])
       self.gamestate.move(mover, destinationcoord)
       return
 
@@ -118,8 +100,8 @@ class Game:
       if len(words) < 3 or (not words[1][0].isdigit()) or (not words[-1][0].isdigit()):
         print 'error, badly formed shoot command'
         return
-      shootercoord = Game.parsecoord(words[1])
-      targetcoord = Game.parsecoord(words[-1])
+      shootercoord = util.parsecoord(words[1])
+      targetcoord = util.parsecoord(words[-1])
       shooter = self.gamestate.thingat(shootercoord)
       target = self.gamestate.thingat(targetcoord)
       if shooter == None:
@@ -139,7 +121,7 @@ class Game:
         print 'error, badly formed \'new\' command'
         return
       # check for out of bounds TODO
-      spawncoord = Game.parsecoord(words[2])
+      spawncoord = util.parsecoord(words[2])
       if not spawncoord or (
           spawncoord[0] < 0 or spawncoord[0] >= HEIGHT or 
           spawncoord[1] < 0 or spawncoord[1] >= WIDTH):
@@ -172,7 +154,7 @@ class Game:
             # alternately see if last word is in coord format
             # NOTE: assume relative not absolute coord
             # TODO: methodize, similar to 'go NW' syntax below
-            rel_coord = Game.parsecoord(words[-1])
+            rel_coord = util.parsecoord(words[-1])
             if rel_coord:
               abs_coord = util.coord_sum(unit.coord, rel_coord)
               target = self.gamestate.thingat(abs_coord)

@@ -17,6 +17,20 @@ def dist_to_string(tiles):
 def coordtostring(coord):
   return "{0},{1}".format(coord[0],coord[1])
 
+# if coord is correctly formatted (eg '4,8' with no spaces) return as [4,8]
+# else return None
+def parsecoord(coordstring):
+  # We allow either the 0th or 1st char to be digit,
+  # because 0th char might be a '-' for a negative number
+  if (coordstring.find(',') is not -1 and
+      (coordstring[0].isdigit() or coordstring[1].isdigit()) and
+      coordstring[-1].isdigit()):
+    halves = coordstring.strip().split(',')
+    coord = [int(halves[0]), int(halves[1])]
+    return coord
+  else:
+    return None
+
 def save_to_string(save_value):
   if save_value == 7:
     return '-'
