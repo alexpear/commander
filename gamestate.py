@@ -100,7 +100,11 @@ class Gamestate:
     return False
 
   def is_locked(self, thing):
-    pass
+    for other in self.things:
+      if (other.allegiance != 'gaia' and
+          other.allegiance != thing.allegiance and
+          areAdjacent(self, other)):
+        return True
     return False
 
   # Has less restrictions than move()
