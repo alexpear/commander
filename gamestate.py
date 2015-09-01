@@ -5,8 +5,8 @@ from random import randrange
 import unit_modu
 import util
 
-WIDTH = 12
 HEIGHT = 8
+WIDTH = 12
 
 TERRAIN_FREQUENCY = 0.25
 
