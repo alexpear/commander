@@ -26,7 +26,8 @@ def coordtostring(coord):
 def parsecoord(coordstring):
   # We allow either the 0th or 1st char to be digit,
   # because 0th char might be a '-' for a negative number
-  if (coordstring.find(',') is not -1 and
+  if (type(coordstring) == 'str' and
+      coordstring.find(',') != -1 and
       (coordstring[0].isdigit() or coordstring[1].isdigit()) and
       coordstring[-1].isdigit()):
     halves = coordstring.strip().split(',')
