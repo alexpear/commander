@@ -55,12 +55,49 @@ def constrain(n, minimum, maximum):
   else:
     return n
 
+# All values inclusive for now, ie min and max allowable numbers.
+def constrainCoord(coord, rMin=0, rMax=DEFAULT_HEIGHT-1, cMin=0, cMax=DEFAULT_WIDTH-1):
+  if coord[0] < rMin:
+    newR = rMin
+  elif coord[0] > rMax:
+    newR = rMax
+  else:
+    newR = coord[0]
+
+  if coord[1] < cMin:
+    newC = cMin
+  elif coord[1] > cMax:
+    newC = cMax
+  else:
+    newC = coord[1]
+
+  return [newR, newC]
+
+def isCoord(object):
+  return (type(object) == list
+    and len(object) == 2
+    and type(object[0]) == int
+    and type(object[1]) == int)
+
+def coordOf(obj):
+  if isCoord(obj):
+    return obj
+  elif hasattr(obj, 'coord'):
+    return obj.coord
+  else:
+    return None
+
 # needs work
-# takes 2 coords now
+# takes 2 coords or 2 Things
 def distance(a, b):
-  rowdiff = abs(a[0] - b[0])
-  coldiff = abs(a[1] - b[1])
+  aCoord = coordOf(a)
+  bCoord = coordOf(b)
+  rowdiff = abs(aCoord[0] - bCoord[0])
+  coldiff = abs(aCoord[1] - bCoord[1])
   return int(round(math.sqrt(rowdiff**2 + coldiff**2)))
+
+def areAdjacent(a, b):
+  return distance(a,b) <= 1.5
 
 def coord_sum(a, b):
   return [a[0] + b[0], a[1] + b[1]]
