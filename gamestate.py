@@ -76,6 +76,20 @@ class Gamestate:
     # TODO track casualties per turn/phase
     # because of 25% morale thing, etc
 
+  def thingsInRadius(self, center, radius=1.5):
+    nearbyThings = []
+    for thing in self.things:
+      if util.distance(center, thing.coord) <= radius:
+        nearbyThings.append(thing)
+    return nearbyThings
+
+  def adjacentThings(self, centerCoord):
+    return self.thingsInRadius(centerCoord, 1.5)
+
+  # Convenience function
+  def areAdjacent(self, a, b):
+    return util.areAdjacent(a, b)
+
   def zone_of_control_blocks(self, coord, mover):
     for other_thing in self.things:
       if (other_thing.ws > 0 and
