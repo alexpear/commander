@@ -17,6 +17,7 @@ def inches(tiles):
 def dist_to_string(tiles):
   return '{sq}sq / {inch}"'.format(sq=tiles, inch=inches(tiles))
 
+# TODO: Make class Coord. fields like .r and .c, etc.
 def coordtostring(coord):
   return "{0},{1}".format(coord[0],coord[1])
 
@@ -40,6 +41,7 @@ def save_to_string(save_value):
   else:
     return '{val}+'.format(val=save_value)
 
+# Takes a number
 def constrain(n, minimum, maximum):
   if minimum > maximum:
     temp = maximum
