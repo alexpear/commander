@@ -171,9 +171,5 @@ def direction_from(a, b):
   return [one_zero_minusone(diff_coord[0]),
           one_zero_minusone(diff_coord[1])]
 
-def coords_in_radius(center, radius=1, board_height=8, board_width=12):
-  nw_corner = [center[0] - radius, center[1] - radius]
-  pass
-
 def next_letter(letter):
   return chr(ord(letter) + 1)
