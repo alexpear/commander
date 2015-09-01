@@ -6,6 +6,9 @@ import random
 # TODO standardize underscore_style to camelCaseStyle across this repo
 # TODO put TODOs from notes.txt into a committed file
 
+DEFAULT_HEIGHT = 8
+DEFAULT_WIDTH = 12
+
 def tiles(inches):
   return inches / 6.0
 def inches(tiles):
