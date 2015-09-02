@@ -15,6 +15,7 @@ wargear_stats = {
     's': 3, 'ap': 7, 'range': 2, 'type': 'pistol', 'shots': 1
   },
   'autogun': {
+    # TODO: consider standardizing 'rapid fire' etc to 'rapidFire'
     's': 3, 'ap': 7, 'range': 4, 'type': 'rapid fire', 'shots': 1
   },
   'autocannon': {
