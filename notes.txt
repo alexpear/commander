@@ -1,0 +1,109 @@
+TODO: 
+-rapid fire, heavy etc rules
+ -track moved, shot per unit
+
+- simple assault, obv
+ - assault function and/or command
+ - ability for bots to assault
+ - assault phase
+
+-terrain
+ -cover
+ -difficult terrain
+ -LoS
+
+-bug: trying to move into occupied square does not print an error message. a subtle/silent crash?
+
+-improve 'go' aka the method to make all rebels act()?
+ -before each, print who is about to act
+  -print as name or as sprite? both perhaps 
+
+-structure as turns, end turn/phase action, etc 
+ - track whether unit has used its movement/shooting so far this turn 
+ - how much movement it has left
+ - go / end turn required to refresh movement/shooting fields
+
+-move some conceptual sections out into separate files/modules
+
+-minigames:
+ -at how uneven a points ratio can i win?
+
+- enter more creatures' stats into data.py
+
+- simple pathfinding for act()? even just random or searching only the adjacent spaces?
+
+
+lower priority:
+-printinfo command for a specific unit?     
+
+-track how many casualities a unit has taken this turn/phase, for 25% morale check etc
+ -other morale rules
+
+-track original/starting strength of a unit, for morale / Scoring Units
+
+-print notifications and shooting detail differently?
+ -lowercase or indented shooting
+ -preface major notifcations with ===, <<<, ppp, etc? 
+ -in move(), dont draw map if error.
+
+very low priority:
+-could add ' aka prime notation, for 4 repeats of sprites
+
+
+
+
+so what can i module out?
+-Game vs Gamestate?
+ -could Gamestate be its own module? 
+-maybe a class for global methods?
+ -some could go into class Game, some cant
+ -Util
+
+
+
+
+  c 0 1 2 3 4 5 6 7 8 9 X E
+r   - - - - - - - - - - - -
+0 |                         | 0
+1 |         o     m         | 1
+2 |                         | 2
+3 |                 M       | 3
+4 |               0         | 4
+5 |                 +       | 5
+6 |                         | 6
+7 |     M             c     | 7
+    - - - - - - - - - - - -
+    0 1 2 3 4 5 6 7 8 9 X E
+
+
+
+
+  c 0 1 2 3 4 5 6 7 8 9 X E
+r   - - - - - - - - - - - -
+0 |             0           | 0
+1 |   0     s   0 c         | 1
+2 |                         | 2
+3 |     0 0                 | 3
+4 |     0       0 0 0 0     | 4
+5 |                         | 5
+6 |                         | 6
+7 |     m     0 0     o     | 7
+    - - - - - - - - - - - -
+    0 1 2 3 4 5 6 7 8 9 X E
+
+
+what to call it
+m go s
+m shoot s
+
+opts
+- reserve cardinal direction letters (nwse)
+- specify cardinals like: m south
+ - or nn ss ww ee
+ 
+
+turn structure short term opts
+- info command to print which turn it is
+
+
+
