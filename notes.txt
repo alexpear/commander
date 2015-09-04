@@ -52,6 +52,38 @@ very low priority:
 
 
 
+
+
+
+opts for Commander parsing
+  inputMap() calls one function per first word of input
+    analogy to unix command line programs
+    some do a lot of disambiguation
+      not sure what to name those yet
+        drawCommand()? otherCommand()?
+    might not be too weird. fits the current model okay. 
+  functions are instead one per user action, and there are some if statements choosing which goes where
+    hopefully less messy than current system 
+      well the contents would be methodized at least
+
+
+'unit testing'
+  easier to do manually for now, as things change fast
+  basically do:
+    python
+    import [extender of app] as g
+    o = g.[ClassName]()
+    o.inputMap.keys()    # to see what options exist
+    o.ui()
+    draw
+    [other functions]
+    adoigasdngpoi
+    quit
+
+
+
+
+
 so what can i module out?
 -Game vs Gamestate?
  -could Gamestate be its own module? 
