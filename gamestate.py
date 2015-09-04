@@ -294,6 +294,7 @@ class Gamestate:
     self.things = []  # all things
     self.spawndebugunits()
     self.spawn_random_terrain()
+    self.turn_faction = 'protectorate'
 
   def width(self):
     return len(self.grid)

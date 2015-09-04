@@ -37,7 +37,6 @@ cardinal_directions = {
 class Game:
   def __init__(self):
     self.gamestate = gamestate.Gamestate()
-    self.turn_faction = 'protectorate'
 
   # todo low priority: make this cascade into something neater
   # eg, methodize a lot
@@ -195,7 +194,7 @@ class Game:
     # TODO: differentiate the two players' turns
     elif cmd in ('rebels', 'go', 'enemies', 'enemy turn', 'end turn', 'endturn', 'end', 'done'):
       # todo methodize as start_turn() run_turn() etc
-      self.turn_faction = 'rebels'
+      self.gamestate.turn_faction = 'rebels'
       self.gamestate.refresh_army('rebels')
       for unit in self.gamestate.things:
         if unit.allegiance == 'rebels':
@@ -203,7 +202,7 @@ class Game:
             unit=unit.name_with_sprite()))
           self.gamestate.act(unit)
 
-      self.turn_faction = 'protectorate'
+      self.gamestate.turn_faction = 'protectorate'
       self.gamestate.refresh_army('protectorate')
       return
     # TODO also ability to make the _protectorate_ auto-take its turn
