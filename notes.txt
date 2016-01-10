@@ -1,4 +1,4 @@
-TODO: 
+TODO:
 -rapid fire, heavy etc rules
  -track moved, shot per unit
 
@@ -139,3 +139,103 @@ turn structure short term opts
 
 
 
+
+
+
+sketch of program that generates random legal 40k army lists
+. naive
+ . completely random hq and 2 troops
+ . iteratively add random units until out of points
+. proportions
+ . randomly split points up into units beforehand
+  . perhaps approximately
+ . then flesh out those units
+
+a 40k army is like a tree
+. special field: which list/codex it uses
+ . any customization or variations
+  . eg astartes modifiers, Witch Hunters with Inquisitor, etc
+. points total
+. hqs
+ . unit...
+. elites
+. troops
+. heavy supports
+. fast attacks
+
+example
+{
+  ...
+  'hq': {
+    'command squad': {
+      'x4': {
+        'space marine veteran': {
+          'base_points': 19,
+          'frag grenades': 1,
+          'total_points': 20
+        },
+        'total_points': 80
+      },
+      'codicier': {
+        'base_points': 105,
+        'force weapon': 20,
+        'total_points': 125
+      },
+      'total_points': 205
+    }
+  }
+}
+
+alternate options
+. 'base' and 'total' instead of 'base_points' etc
+. compatibility with less verbose forms
+
+i'd like a checker that confirms these lists are valid and fills out the totals
+
+trees that represent codex army list templates:
+{
+  'troops': {
+    'tactical squad': {
+      'base': {
+        'x5': {
+          'battle brother': {  // this is a pointer to a model entry elsewhere in the tree.
+            'wargear': [
+              'bolter',
+              'bolt pistol',
+              'power armor'
+            ]
+          }
+        },
+        'total_points': 80
+      },
+      'options': [
+        {
+          'type': 'add_models',
+          'new_models': {
+            'battle brother': {
+              'base_points': 16,
+              'bolter': 0,
+              'bolt pistol': 0,
+              'power armor': 0
+            },
+            'total_points': 16
+          },
+          'total_points': 16,
+          'maximum_times': 5
+        },
+        {
+          'type': 'replacement',
+          'old': {
+            'battle-brother'  // todo: types and details here
+          }
+          'new_models': {
+            'veteran-sergeant': {
+              // etc...
+              // a way to express armor access
+            }
+          }
+        }
+      ]
+    }
+  }
+}
